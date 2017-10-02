@@ -34,6 +34,14 @@ class GaussianSongClassifier(SongClassifier):
         return min(genre_errors, key=genre_errors.get)
 
 
+class NearestNeighbourClassifier(SongClassifier):
+    def train(self, song):
+        pass
+
+    def classify(self, song):
+        pass
+
+
 class GaussianGenreModel:
     def __init__(self, genre, mean_vector, covariance_matrix):
         self.genre = genre
@@ -60,11 +68,11 @@ def test_pandas():
         for val in row:
             print('Val: {}'.format(val))
 
-    # for i in range(n):
-    #     song_id = labels.loc[i, 'id']
-    #     category = labels.loc[i, 'category']
-    #     song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
-    #     print(song)
+            # for i in range(n):
+            #     song_id = labels.loc[i, 'id']
+            #     category = labels.loc[i, 'category']
+            #     song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            #     print(song)
 
 
 if __name__ == '__main__':
