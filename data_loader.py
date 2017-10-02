@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 import pandas as pd
+import numpy as np
 from numpy.linalg import inv
 
 
@@ -8,7 +9,7 @@ class SongClassifier:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def train(self, song):
+    def train(self, song, genre):
         raise NotImplementedError
 
     @abstractmethod
@@ -20,40 +21,37 @@ class GaussianSongClassifier(SongClassifier):
     def __init__(self, genre_models):
         self.genre_models = genre_models
 
-    def train(self, song):
-        for model in self.genre_models:
-            for feature_vector in song:
-                model.classify(feature_vector)
+    def train(self, song, genre):
+        model = self.genre_models[genre]
+        model.update(song)
 
     def classify(self, song):
         genre_errors = {}
         for model in self.genre_models:
             genre = model.genre
-            for feature_vector in song:
-                genre_errors[genre] += model.compute_error(feature_vector)
+            error = 0
+            for feature_vector in song.values:
+                error += model.compute_error(feature_vector)
+            genre_errors[genre] = error
         return min(genre_errors, key=genre_errors.get)
 
 
 class NearestNeighbourClassifier(SongClassifier):
-    def train(self, song):
+    def train(self, song, genre):
         pass
 
     def classify(self, song):
         pass
 
 
-class GaussianGenreModel:
-    def __init__(self, genre, mean_vector, covariance_matrix):
+class NaiveGaussianGenreModel:
+    def __init__(self, genre, song_samples):
         self.genre = genre
-        self.mean_vector = mean_vector
-        self.covariance_matrix = covariance_matrix
-
-    def classify(self, x):
-        pass
+        self.mean_vector = np.mean(song_samples, axis=0)
+        self.covariance_matrix = np.cov(song_samples, rowvar=False)
 
     def compute_error(self, x):
-        a = x - self.mean_vector
-        return a.dot(inv(self.covariance_matrix)).dot(a.T).item()  # Array of size 1, return its value
+        return (x - self.mean_vector).dot(inv(self.covariance_matrix)).dot(x - self.mean_vector)
 
 
 def load_labels():
@@ -62,17 +60,51 @@ def load_labels():
 
 def test_pandas():
     labels = load_labels()
-    n = len(labels)
+    genre_models = []
+    for genre, song_genres_ids in labels.groupby('category'):
+        song_samples = []
+        for val in song_genres_ids.values:
+            song_id = val[0]
+            song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            song_sample = song.values
+            song_samples.append(song_sample)
+        song_samples_matrix = np.vstack(song_samples)
+        print('Training genre {}'.format(genre))
+        print('SAMPLES: {}'.format(song_samples_matrix))
+        print('SAMPLES size: {}'.format(song_samples_matrix.shape))
+        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        genre_models.append(genre_model)
 
-    for row in labels.values:
-        for val in row:
-            print('Val: {}'.format(val))
+    classifier = GaussianSongClassifier(genre_models)
 
-            # for i in range(n):
-            #     song_id = labels.loc[i, 'id']
-            #     category = labels.loc[i, 'category']
-            #     song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
-            #     print(song)
+    for genre, song_genres_ids in labels.groupby('category'):
+        print('Expected genre: {}'.format(genre))
+        for val in song_genres_ids.values:
+            song_id = val[0]
+            song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            print('Actual genre: {}'.format(classifier.classify(song)))
+
+
+
+
+
+    # for row in labels.values:
+    #     for val in row:
+    #         print('Val: {}'.format(val))
+
+    # for i in range(1):
+    #     song_id = labels.loc[i, 'id']
+    #     category = labels.loc[i, 'category']
+    #     song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+    #     print(song)
+    #     # print('Song type: {}'.format(type(song)))
+    #     # print('Song values type: {}'.format(type(song.values)))
+    #     print('Song {} transpose (row i = values for feature i):'.format(i))
+    #     print(song.values.T)
+    #     # for feature_vector in song.values:
+    #     #     print('feature_vector type: {}'.format(type(feature_vector)))
+    #     #     for value in feature_vector:
+    #     #         print('value type: {}'.format(type(feature_vector)))
 
 
 if __name__ == '__main__':
