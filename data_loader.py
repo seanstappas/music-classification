@@ -1,5 +1,6 @@
-from abc import ABCMeta, abstractmethod
+from __future__ import division
 
+from abc import ABCMeta, abstractmethod
 import pandas as pd
 import numpy as np
 from numpy.linalg import inv
@@ -69,20 +70,28 @@ def test_pandas():
             song_sample = song.values
             song_samples.append(song_sample)
         song_samples_matrix = np.vstack(song_samples)
-        print('Training genre {}'.format(genre))
-        print('SAMPLES: {}'.format(song_samples_matrix))
-        print('SAMPLES size: {}'.format(song_samples_matrix.shape))
+        # print('Training genre {}'.format(genre))
+        # print('SAMPLES: {}'.format(song_samples_matrix))
+        # print('SAMPLES size: {}'.format(song_samples_matrix.shape))
         genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
         genre_models.append(genre_model)
 
     classifier = GaussianSongClassifier(genre_models)
 
+    total_count = 0
+    match_count = 0
     for genre, song_genres_ids in labels.groupby('category'):
         print('Expected genre: {}'.format(genre))
         for val in song_genres_ids.values:
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
-            print('Actual genre: {}'.format(classifier.classify(song)))
+            actual_genre = classifier.classify(song)
+            print('Actual genre: {}'.format(actual_genre))
+            total_count += 1
+            if genre == actual_genre:
+                match_count += 1
+
+    print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
 
 
 
