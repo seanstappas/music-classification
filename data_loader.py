@@ -1,5 +1,6 @@
 from __future__ import division
 
+import random
 from abc import ABCMeta, abstractmethod
 import pandas as pd
 import numpy as np
@@ -52,7 +53,8 @@ class NaiveGaussianGenreModel:
         self.covariance_matrix = np.cov(song_samples, rowvar=False)
 
     def compute_error(self, x):
-        return (x - self.mean_vector).dot(inv(self.covariance_matrix)).dot(x - self.mean_vector)
+        a = x - self.mean_vector
+        return a.dot(inv(self.covariance_matrix)).dot(a)
 
 
 def load_labels():
@@ -62,14 +64,17 @@ def load_labels():
 def test_pandas():
     labels = load_labels()
     genre_models = []
+    genres = []
     for genre, song_genres_ids in labels.groupby('category'):
+        genres.append(genre)
         song_samples = []
         for val in song_genres_ids.values:
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
             song_sample = song.values
             song_samples.append(song_sample)
-        song_samples_matrix = np.vstack(song_samples)
+            # song_samples.append(np.mean(song_sample, axis=0))
+        song_samples_matrix = np.vstack(song_samples)  # TODO: Average by length of each song? Now: favors longer songs.
         # print('Training genre {}'.format(genre))
         # print('SAMPLES: {}'.format(song_samples_matrix))
         # print('SAMPLES size: {}'.format(song_samples_matrix.shape))
@@ -86,13 +91,16 @@ def test_pandas():
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
             actual_genre = classifier.classify(song)
+            # actual_genre = random.choice(genres)
             print('Actual genre: {}'.format(actual_genre))
             total_count += 1
             if genre == actual_genre:
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
-
+    # Matched 429 out of 1511 songs: 28.3917935142%
+    # Song average: Matched 182 out of 1511 songs: 12.0450033091%
+    # Random: Matched 167 out of 1511 songs: 11.0522832561%
 
 
 
