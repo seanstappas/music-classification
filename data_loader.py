@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from numpy.linalg import inv
 
+from lshash import LSHash
 
 class SongClassifier:
     __metaclass__ = ABCMeta
@@ -144,6 +145,7 @@ def classify_neighbors_song(k, song, song_labels):
 
 song_cache = {}
 
+
 def classify_neighbors_vector(k, value, song_labels):
     distances_genres = []
     for genre, song_genres_ids in song_labels.groupby('category'):
@@ -174,6 +176,90 @@ def euclidean_distance(a, b):
     return np.linalg.norm(a - b)
 
 
+def classify_nearest_neighbor_lsh(k):
+    lsh = LSHash(3, 12)
+    labels = load_labels()
+
+    for genre, song_genres_ids in labels.groupby('category'):
+        print('Indexing genre: {}'.format(genre))
+        num_values = len(song_genres_ids.values)
+        for i in range(int(num_values / 2)):
+            val = song_genres_ids.values[i]
+            song_id = val[0]
+            song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            for val in song.values:
+                lsh.index(val)
+
+    total_count = 0
+    match_count = 0
+    for genre, song_genres_ids in labels.groupby('category'):
+        print('Expected genre: {}'.format(genre))
+        num_values = len(song_genres_ids.values)
+        for i in range(int(num_values / 2), num_values):
+            val = song_genres_ids.values[i]
+            song_id = val[0]
+            song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            for val in song.values:
+                print('Cache hit:')
+                print(lsh.query(val)[0])
+            actual_genre = 'test'
+            # actual_genre = classify_neighbors_song_lsh(k, song, labels)
+            # actual_genre = random.choice(genres)
+            print('Actual genre: {}'.format(actual_genre))
+            total_count += 1
+            if genre == actual_genre:
+                match_count += 1
+
+    print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
+    # Matched 429 out of 1511 songs: 28.3917935142%
+    # Song average: Matched 182 out of 1511 songs: 12.0450033091%
+    # Random: Matched 167 out of 1511 songs: 11.0522832561%
+    # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
+
+
+def classify_neighbors_song_lsh(k, song, song_labels):
+    genre_freqs = {}
+    for value in song.values:
+        genre = classify_neighbors_vector_lsh(k, value, song_labels)
+        print('Classified {} for vector.'.format(genre))
+        genre_freqs[genre] = genre_freqs.get(genre, 0) + 1
+    return max(genre_freqs, key=genre_freqs.get)
+
+
+def classify_neighbors_vector_lsh(k, value, song_labels):
+    distances_genres = []
+    for genre, song_genres_ids in song_labels.groupby('category'):
+        num_values = len(song_genres_ids.values)
+        for i in range(int(num_values / 2)):
+            val = song_genres_ids.values[i]
+            song_id = val[0]
+            if song_id in song_cache:
+                song = song_cache[song_id]
+            else:
+                song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+                song_cache[song_id] = song
+            for feature_vector in song.values:
+                distance = euclidean_distance(value, feature_vector)
+                distances_genres.append((distance, genre))
+    distances_genres.sort()
+    print('Distances: {}'.format(distances_genres))
+    genre_freqs = {}
+    for i in range(k):
+        genre = distances_genres[i][1]
+        genre_freqs[genre] = genre_freqs.get(genre, 0) + 1
+    return max(genre_freqs, key=genre_freqs.get)
+
+
+class LocalitySensitiveHash:
+    def classify_vector(self, vector, genre):
+        pass
+
+
+
+
+
+
 if __name__ == '__main__':
     # classify_gaussian()
-    classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
+    # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
+    classify_nearest_neighbor_lsh(5)
