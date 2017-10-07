@@ -251,8 +251,14 @@ def classify_neighbors_vector_lsh(k, value, song_labels):
 
 
 class LocalitySensitiveHash:
-    def classify_vector(self, vector, genre):
+    def __init__(self, l):
+        self.hash_tables = []
+        for i in range(l):
+            self.hash_tables.append({})
+
+    def classify_vector(self, vector):
         pass
+
 
 
 
