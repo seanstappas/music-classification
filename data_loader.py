@@ -89,7 +89,7 @@ def classify_gaussian():
     total_count = 0
     match_count = 0
     for genre, song_genres_ids in labels.groupby('category'):
-        print('Expected genre: {}'.format(genre))
+        print('Predicted genre: {}'.format(genre))
         num_values = len(song_genres_ids.values)
         for i in range(int(num_values / 2), num_values):
             val = song_genres_ids.values[i]
@@ -107,6 +107,7 @@ def classify_gaussian():
     # Song average: Matched 182 out of 1511 songs: 12.0450033091%
     # Random: Matched 167 out of 1511 songs: 11.0522832561%
     # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
+    # TODO: Create confusion matrix
 
 
 def classify_nearest_neighbor(k):
@@ -138,7 +139,7 @@ def classify_neighbors_song(k, song, song_labels):
     genre_freqs = {}
     for value in song.values:
         genre = classify_neighbors_vector(k, value, song_labels)
-        print('Classified {} for vector.'.format(genre))
+        # print('Classified {} for vector.'.format(genre))
         genre_freqs[genre] = genre_freqs.get(genre, 0) + 1
     return max(genre_freqs, key=genre_freqs.get)
 
@@ -164,7 +165,7 @@ def classify_neighbors_vector(k, value, song_labels):
                 distance = euclidean_distance(value, feature_vector)
                 distances_genres.append((distance, genre))
     distances_genres.sort()
-    print('Distances: {}'.format(distances_genres))
+    # print('Distances: {}'.format(distances_genres))
     genre_freqs = {}
     for i in range(k):
         genre = distances_genres[i][1]
@@ -205,7 +206,7 @@ def classify_nearest_neighbor_lsh(k):
             actual_genre = 'test'
             # actual_genre = classify_neighbors_song_lsh(k, song, labels)
             # actual_genre = random.choice(genres)
-            print('Actual genre: {}'.format(actual_genre))
+            print('Predicted genre: {}'.format(actual_genre))
             total_count += 1
             if genre == actual_genre:
                 match_count += 1
@@ -267,5 +268,5 @@ class LocalitySensitiveHash:
 
 if __name__ == '__main__':
     # classify_gaussian()
-    # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
-    classify_nearest_neighbor_lsh(5)
+    classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
+    # classify_nearest_neighbor_lsh(5)

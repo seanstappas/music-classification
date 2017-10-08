@@ -1,0 +1,53 @@
+\documentclass[a4paper,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage}
+\usepackage{indentfirst}
+\usepackage[per-mode=symbol]{siunitx}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage[format=plain,font=it]{caption}
+\usepackage{subcaption}
+\usepackage{standalone}
+\usepackage[nottoc]{tocbibind}
+\usepackage{cleveref}
+\usepackage{listings}
+% Custom commands
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\usepackage{titlesec}
+
+\titleformat*{\section}{\normalsize\bfseries}
+
+%opening
+\title{
+	\textbf{ECSE 526 \\ Assignment 2}
+	\\ \large Music Genre Classification
+}
+\author{Sean Stappas \\ 260639512}
+\date{October 19, 2017}
+
+\begin{document}
+	\sloppy
+	\maketitle
+	\twocolumn
+	
+	\section{What assumptions about the data do we make when we model the date using a Gaussian distribution?}
+	% TODO: See 14.3, 20.2.3
+	
+	
+	\section{When do you expect that a Gaussian will work well and when do you think it will not work well?}
+	
+	\section{What values of k work best for the kNN classifier?}
+	
+	\section{Based on your results from this assignment, which classifier (Gaussian or kNN) works best for the task of Music Genre Classification? Why?}
+	
+	%\renewcommand\refname{}
+	%\bibliographystyle{unsrt}
+	%\bibliography{readings}{}
+	
+\end{document}
