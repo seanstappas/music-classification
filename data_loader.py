@@ -1,12 +1,14 @@
 from __future__ import division
 
-import random
+import os
+import csv
 from abc import ABCMeta, abstractmethod
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+from lshash import LSHash
 from numpy.linalg import inv
 
-from lshash import LSHash
 
 class SongClassifier:
     __metaclass__ = ABCMeta
@@ -89,7 +91,7 @@ def classify_gaussian():
     total_count = 0
     match_count = 0
     for genre, song_genres_ids in labels.groupby('category'):
-        print('Predicted genre: {}'.format(genre))
+        print('Expected genre: {}'.format(genre))
         num_values = len(song_genres_ids.values)
         for i in range(int(num_values / 2), num_values):
             val = song_genres_ids.values[i]
@@ -97,7 +99,7 @@ def classify_gaussian():
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
             actual_genre = classifier.classify(song)
             # actual_genre = random.choice(genres)
-            print('Actual genre: {}'.format(actual_genre))
+            print('Predicted genre: {}'.format(actual_genre))
             total_count += 1
             if genre == actual_genre:
                 match_count += 1
@@ -107,7 +109,41 @@ def classify_gaussian():
     # Song average: Matched 182 out of 1511 songs: 12.0450033091%
     # Random: Matched 167 out of 1511 songs: 11.0522832561%
     # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
-    # TODO: Create confusion matrix
+    # TODO: Create confusion matrix... Why is RnB predicted so often?
+
+
+def classify_gaussian_kaggle():
+    labels = load_labels()
+    genre_models = []
+    genres = []
+    for genre, song_genres_ids in labels.groupby('category'):
+        genres.append(genre)
+        song_samples = []
+        num_values = len(song_genres_ids.values)
+        for i in range(int(num_values)):
+            val = song_genres_ids.values[i]
+            song_id = val[0]
+            song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
+            song_sample = song.values
+            song_samples.append(song_sample)
+            # song_samples.append(np.mean(song_sample, axis=0))
+        song_samples_matrix = np.vstack(song_samples)  # TODO: Average by length of each song? Now: favors longer songs.
+        # print('Training genre {}'.format(genre))
+        # print('SAMPLES: {}'.format(song_samples_matrix))
+        # print('SAMPLES size: {}'.format(song_samples_matrix.shape))
+        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        genre_models.append(genre_model)
+
+    classifier = GaussianSongClassifier(genre_models)
+
+    with open('song_data/test_labels.csv', 'ab') as f:
+        writer = csv.writer(f)
+        writer.writerow(('id', 'category'))
+        for song_id in os.listdir('song_data/test/'):
+            song = pd.read_csv('song_data/test/{}'.format(song_id))
+            genre = classifier.classify(song)
+            print('Predicted genre: {}'.format(genre))
+            writer.writerow((song_id, genre))
 
 
 def classify_nearest_neighbor(k):
@@ -189,7 +225,7 @@ def classify_nearest_neighbor_lsh(k):
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
             for val in song.values:
-                lsh.index(val)
+                lsh.index(val, extra_data=genre)
 
     total_count = 0
     match_count = 0
@@ -200,10 +236,19 @@ def classify_nearest_neighbor_lsh(k):
             val = song_genres_ids.values[i]
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
-            for val in song.values:
-                print('Cache hit:')
-                print(lsh.query(val)[0])
-            actual_genre = 'test'
+            genre_freqs = {}
+
+            # print('Song: {}'.format(song))
+            avg_song_val = np.mean(song)
+            # print('Avg: {}'.format(avg_song_val))
+
+            neighbours = lsh.query(avg_song_val, num_results=k)
+            for neighbour in neighbours:
+                # print(neighbour)
+                genre = neighbour[0][1]
+                genre_freqs[genre] = genre_freqs.get(genre, 0) + 1
+
+            actual_genre = max(genre_freqs, key=genre_freqs.get)
             # actual_genre = classify_neighbors_song_lsh(k, song, labels)
             # actual_genre = random.choice(genres)
             print('Predicted genre: {}'.format(actual_genre))
@@ -212,10 +257,6 @@ def classify_nearest_neighbor_lsh(k):
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
-    # Matched 429 out of 1511 songs: 28.3917935142%
-    # Song average: Matched 182 out of 1511 songs: 12.0450033091%
-    # Random: Matched 167 out of 1511 songs: 11.0522832561%
-    # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
 
 
 def classify_neighbors_song_lsh(k, song, song_labels):
@@ -261,12 +302,32 @@ class LocalitySensitiveHash:
         pass
 
 
-
-
-
+def test_lsh(k):
+    lsh = LSHash(3, 12)
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 17]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 21]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 23]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 24]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 25]))
+    lsh.index(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 26]))
+    q = lsh.query(np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14]), k)
+    print(len(q))
+    for res in q:
+        print(res)
 
 
 if __name__ == '__main__':
     # classify_gaussian()
-    classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
+    # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
     # classify_nearest_neighbor_lsh(5)
+    classify_gaussian_kaggle()
+    # test_lsh(5)
