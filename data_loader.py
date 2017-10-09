@@ -109,7 +109,7 @@ def classify_gaussian():
     # Song average: Matched 182 out of 1511 songs: 12.0450033091%
     # Random: Matched 167 out of 1511 songs: 11.0522832561%
     # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
-    # TODO: Create confusion matrix... Why is RnB predicted so often?
+    # TODO: Create confusion matrix... Why is RnB predicted so often? Maybe take weighted average...
 
 
 def classify_gaussian_kaggle():
