@@ -165,10 +165,7 @@ def classify_nearest_neighbor(k):
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
-    # Matched 429 out of 1511 songs: 28.3917935142%
-    # Song average: Matched 182 out of 1511 songs: 12.0450033091%
-    # Random: Matched 167 out of 1511 songs: 11.0522832561%
-    # Half dataset: Matched 221 out of 758 songs: 29.1556728232%
+    # Matched x out of y songs: z%
 
 
 def classify_neighbors_song(k, song, song_labels):
@@ -257,6 +254,7 @@ def classify_nearest_neighbor_lsh(k):
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
+    # Matched 378 out of 758 songs: 49.8680738786% (Using average of each song)
 
 
 def classify_neighbors_song_lsh(k, song, song_labels):
@@ -328,6 +326,6 @@ def test_lsh(k):
 if __name__ == '__main__':
     # classify_gaussian()
     # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
-    # classify_nearest_neighbor_lsh(5)
-    classify_gaussian_kaggle()
+    classify_nearest_neighbor_lsh(5)
+    # classify_gaussian_kaggle()
     # test_lsh(5)

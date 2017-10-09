@@ -6,6 +6,8 @@ import numpy as np
 import tensorflow as tf
 
 # Data sets
+import time
+
 GENRE_TRAINING = "song_data/labels_train.csv"
 GENRE_TEST = "song_data/labels_test.csv"
 
@@ -13,6 +15,7 @@ GENRES = ['classical', 'country', 'edm_dance', 'jazz', 'kids', 'latin', 'metal',
 
 
 def main():
+
     # Load datasets.
     print('Load data')
     training_set = tf.contrib.learn.datasets.base.load_csv_with_header(
@@ -29,7 +32,7 @@ def main():
 
     # Build 3 layer DNN with 10, 20, 10 units respectively.
     classifier = tf.estimator.DNNClassifier(feature_columns=feature_columns,
-                                            hidden_units=[10, 20, 10],
+                                            hidden_units=[10],
                                             n_classes=10,  # 10 genres
                                             model_dir="/tmp/genre_model")
     # Define the training inputs
@@ -41,7 +44,7 @@ def main():
 
     # Train model.
     print('Train model')
-    classifier.train(input_fn=train_input_fn, steps=None)
+    classifier.train(input_fn=train_input_fn, steps=600000)
 
     # Define the test inputs
     test_input_fn = tf.estimator.inputs.numpy_input_fn(
@@ -74,4 +77,6 @@ def main():
 
 
 if __name__ == "__main__":
+    t = time.time()
     main()
+    print('Total runtime: {} s'.format(time.time() - t))
