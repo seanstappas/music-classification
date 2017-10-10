@@ -12,7 +12,7 @@ from scipy.spatial import KDTree
 
 import sklearn.neighbors as nb
 
-from classifiers import NaiveGaussianGenreModel, GaussianSongClassifier
+from classifiers import GaussianSongClassifier
 
 
 def load_labels():
@@ -34,8 +34,8 @@ def classify_gaussian():
             song_sample = song.values
             song_samples.append(song_sample)
         song_samples_matrix = np.vstack(song_samples)  # TODO: Average by length of each song? Now: favors longer songs.
-        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
-        genre_models.append(genre_model)
+        # genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        # genre_models.append(genre_model)
 
     classifier = GaussianSongClassifier(genre_models)
 
@@ -104,8 +104,8 @@ def classify_gaussian_kaggle():
         # print('Training genre {}'.format(genre))
         # print('SAMPLES: {}'.format(song_samples_matrix))
         # print('SAMPLES size: {}'.format(song_samples_matrix.shape))
-        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
-        genre_models.append(genre_model)
+        # genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        # genre_models.append(genre_model)
 
     classifier = GaussianSongClassifier(genre_models)
 
@@ -362,9 +362,13 @@ def classify_nearest_neighbor_kd_tree_sk(k):
     # 100: Matched 292 out of 758 songs: 38.5224274406%
 
     # Non Average:
-    # k = 100: Matched 415 out of 758 songs: 54.7493403694%
+    # k = 1: Matched 447 out of 758 songs: 58.9709762533%
+    # k = 2: Matched 455 out of 758 songs: 60.0263852243%
     # k = 3: Matched 455 out of 758 songs: 60.0263852243%
+    # k = 4: Matched 450 out of 758 songs: 59.3667546174%
+    # k = 5: Matched 451 out of 758 songs: 59.4986807388%
     # k = 10: Matched 440 out of 758 songs: 58.0474934037%
+    # k = 100: Matched 415 out of 758 songs: 54.7493403694%
 
 
 
@@ -425,7 +429,7 @@ if __name__ == '__main__':
     # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
     # classify_nearest_neighbor_lsh(5)
     # classify_nearest_neighbor_kd_tree(5)
-    classify_nearest_neighbor_kd_tree_sk(10)
+    classify_nearest_neighbor_kd_tree_sk(5)
     # classify_nearest_neighbor_ball_tree(5)
     # classify_gaussian_kaggle()
     # test_lsh(5)
