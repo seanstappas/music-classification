@@ -354,6 +354,7 @@ def classify_nearest_neighbor_kd_tree_sk(k):
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
+    # k = 5: Matched 116 out of 758 songs: 15.3034300792%
 
 
 def classify_nearest_neighbor_ball_tree(k):
@@ -409,11 +410,12 @@ if __name__ == '__main__':
     # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
     # classify_nearest_neighbor_lsh(5)
     # classify_nearest_neighbor_kd_tree(5)
-    # classify_nearest_neighbor_kd_tree_sk(5)
-    classify_nearest_neighbor_ball_tree(5)
+    classify_nearest_neighbor_kd_tree_sk(3)
+    # classify_nearest_neighbor_ball_tree(5)
     # classify_gaussian_kaggle()
     # test_lsh(5)
 
     # Conclusion: sklearn KD tree performs the best
     # TODO: If time permits, implement own version of KD Tree...
     # TODO: Re-organize all these methods to use some kind of interface...
+    # TODO: Play around with different values of k (using 5 now)
