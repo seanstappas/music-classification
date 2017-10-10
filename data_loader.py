@@ -355,6 +355,7 @@ def classify_nearest_neighbor_kd_tree_sk(k):
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
     # k = 5: Matched 116 out of 758 songs: 15.3034300792%
+    # k = 3: Matched 134 out of 758 songs: 17.6781002639%
 
 
 def classify_nearest_neighbor_ball_tree(k):
