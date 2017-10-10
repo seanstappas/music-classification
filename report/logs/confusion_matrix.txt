@@ -1,0 +1,29 @@
+{'latin': {'
+latin': 8, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 0, 'metal': 0, 'pop': 0, 'edm_dance': 0, 'kids': 0, 'rnb': 67},
+
+'classical': {'
+latin': 0, 'classical': 50, 'country': 0, 'rock': 0, 'jazz': 6, 'metal': 0, 'pop': 0, 'edm_dance': 0, 'kids': 14, 'rnb': 0},
+
+'country': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 0, 'metal': 0, 'pop': 10, 'edm_dance': 0, 'kids': 1, 'rnb': 67},
+
+'rock': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 0, 'metal': 0, 'pop': 9, 'edm_dance': 0, 'kids': 1, 'rnb': 61},
+
+'jazz': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 66, 'metal': 0, 'pop': 0, 'edm_dance': 0, 'kids': 3, 'rnb': 13},
+
+'metal': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 3, 'jazz': 0, 'metal': 0, 'pop': 28, 'edm_dance': 4, 'kids': 10, 'rnb': 29},
+
+'pop': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 0, 'metal': 0, 'pop': 1, 'edm_dance': 0, 'kids': 1, 'rnb': 73},
+
+'edm_dance': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 0, 'metal': 0, 'pop': 4, 'edm_dance': 0, 'kids': 3, 'rnb': 72},
+
+'kids': {'
+latin': 0, 'classical': 3, 'country': 0, 'rock': 0, 'jazz': 12, 'metal': 0, 'pop': 2, 'edm_dance': 0, 'kids': 27, 'rnb': 35},
+
+'rnb': {'
+latin': 0, 'classical': 0, 'country': 0, 'rock': 0, 'jazz': 4, 'metal': 0, 'pop': 1, 'edm_dance': 0, 'kids': 1, 'rnb': 69}}
