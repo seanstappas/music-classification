@@ -20,6 +20,7 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 \usepackage{titlesec}
+\usepackage[super]{nth}
 
 \titleformat*{\section}{\normalsize\bfseries}
 
@@ -29,25 +30,45 @@
 	\\ \large Music Genre Classification
 }
 \author{Sean Stappas \\ 260639512}
-\date{October 19, 2017}
+\date{October \nth{19}, 2017}
 
 \begin{document}
 	\sloppy
 	\maketitle
 	\twocolumn
 	
-	\section{What assumptions about the data do we make when we model the date using a Gaussian distribution?}
+	\section{What assumptions about the data do we make when we model the data using a Gaussian distribution?}
 	% TODO: See 14.3, 20.2.3
 	% Good reference: http://scikit-learn.org/stable/modules/neighbors.html
+	
+	Fundamentally, when we model the data using a Gaussian distribution, we assume that it has a Gaussian shape. This mainly implies the following:
+	
+	\begin{enumerate}
+		\item The data has a mean.
+		\item The data has a standard deviation.
+		\item The data is symmetric around its mean.
+	\end{enumerate}
 	
 	
 	\section{When do you expect that a Gaussian will work well and when do you think it will not work well?}
 	
-	\section{What values of k work best for the kNN classifier?}
+	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values.
+	
+	Secondly, if the feature vector distributions of two genres are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two genres.
+	
+	\section{What values of $k$ work best for the kNN classifier?}
+	
+	A common rule-of-thumb for the value of $k$ is that it should be equal to $\sqrt{N}$, where $N$ is the number of training samples. % TODO: Cite here
+	
+	After testing on various values of $k$, the best one was found to be % TODO: Show plot/table comparing values of k, choose best one
 	
 	\section{Based on your results from this assignment, which classifier (Gaussian or kNN) works best for the task of Music Genre Classification? Why?}
 	
-	Based on the above results, the kNN classifier works best for music classification.
+	The results of both classifiers can be seen in % TODO: accuracy for Gaussian and kNN
+	
+	Based on the above results, the kNN classifier works best for music classification. This can be attributed to the simple fact that the Gaussian classifier retains much less information than the kNN for each genre. While the Gaussian classifier only stores a 12x12 covariance matrix and 12x1 mean vector for each genre, the kNN classifier stores every training example and uses these examples to predict every genre. This additional information can allow the kNN classifier to classify new songs with much greater accuracy. 
+	
+	Also, kNN can take into account very complex distributions of feature vectors, whereas the Gaussian classifier will attempt to fit a Gaussian distribution to the data set, which may not be appropriate.
 	
 	% 
 	
