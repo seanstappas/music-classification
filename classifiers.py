@@ -4,28 +4,8 @@ from abc import ABCMeta, abstractmethod
 
 import pandas as pd
 import numpy as np
+import sklearn.neighbors as nb
 import os
-
-GENRE_WEIGHTS = {
-    'classical': 1,
-    'country': 1,
-    'edm_dance': 1,
-    'jazz': 1,
-    'kids': 1.1,
-    'latin': 1.25,
-    'metal': 1,
-    'pop': 1.25,
-    'rnb': 1.25,
-    'rock': 1
-}
-
-
-class ConfusionMatrix:
-    def __init__(self):
-        pass
-
-    def add_genres(self, actual_genre, predicted_genre):
-        pass
 
 
 class SongClassifier:
@@ -38,11 +18,12 @@ class SongClassifier:
         :param songs: the songs to test on
         :param genres: the genres of the songs
         """
+        logging.info('Starting testing.')
         num_matches = 0
-        confusion_matrix = ConfusionMatrix()
+        confusion_matrix = ConfusionMatrix(genres)
         for song, actual_genre in zip(songs, genres):
             predicted_genre = self.classify(song)
-            logging.info('Predicted genre: {}'.format(predicted_genre))
+            logging.info('Actual genre: {}, predicted genre: {}'.format(actual_genre, predicted_genre))
             confusion_matrix.add_genres(actual_genre, predicted_genre)
             if actual_genre == predicted_genre:
                 num_matches += 1
@@ -65,59 +46,115 @@ class SongClassifier:
         :param directory_name:
         :param result_file_name:
         """
+        logging.info('Starting prediction.')
         with open(result_file_name, 'ab') as f:
             writer = csv.writer(f)
             writer.writerow(('id', 'category'))
             for song_id in os.listdir(directory_name):
-                song = pd.read_csv('{}{}'.format(directory_name, song_id))
+                song = pd.read_csv('{}{}'.format(directory_name, song_id)).values
                 predicted_genre = self.classify(song)
                 logging.info('Predicted genre: {}'.format(predicted_genre))
                 writer.writerow((song_id, predicted_genre))
 
 
 class GaussianSongClassifier(SongClassifier):
-    def __init__(self, genre_models):
-        self.genre_models = genre_models
+    def __init__(self, songs, genres):
+        logging.info('Constructing Gaussian classifier.')
+        genres_to_songs = {}
+        for genre in genres:
+            genres_to_songs[genre] = []
+        for song, genre in zip(songs, genres):
+            genres_to_songs[genre].append(song)
+
+        self.genre_models = []
+        for genre, songs in genres_to_songs.iteritems():
+            self.genre_models.append(GaussianGenreModel(songs, genre))
 
     def classify(self, song):
         genre_errors = {}
         for model in self.genre_models:
             genre = model.genre
             error = 0
-            for feature_vector in song.values:
+            for feature_vector in song:
                 error += model.compute_error(feature_vector)
             genre_errors[genre] = error
         return min(genre_errors, key=genre_errors.get)
 
-    class GaussianGenreModel:
-        def __init__(self, genre, song_samples):
-            self.genre = genre
-            self.mean_vector = np.mean(song_samples, axis=0)
-            self.covariance_matrix = np.cov(song_samples, rowvar=False)
-            self.inv_covariance_matrix = np.linalg.inv(self.covariance_matrix)
-
-        def compute_error(self, x):
-            a = x - self.mean_vector
-            return a.dot(self.inv_covariance_matrix).dot(a)
+    def classify_average(self, song):
+        genre_errors = {}
+        for model in self.genre_models:
+            genre = model.genre
+            average_vector = np.mean(song)
+            error = model.compute_error(average_vector)
+            genre_errors[genre] = error
+        return min(genre_errors, key=genre_errors.get)
 
 
-class KnnClassifier(SongClassifier):
-    def __init__(self, k, data):
+class GaussianGenreModel:
+    def __init__(self, songs, genre):
+        logging.info('Constructing Gaussian model for genre {}.'.format(genre))
+        stacked_songs = np.vstack(songs)
+        self.mean_vector = np.mean(stacked_songs, axis=0)
+        self.covariance_matrix = np.cov(stacked_songs, rowvar=False)
+        self.inv_covariance_matrix = np.linalg.inv(self.covariance_matrix)
+        self.genre = genre
+
+    def compute_error(self, x):
+        a = x - self.mean_vector
+        return a.dot(self.inv_covariance_matrix).dot(a)
+
+
+class KnnSongClassifier(SongClassifier):
+    def __init__(self, k, knn_data_structure):
+        logging.info('Constructing kNN classifier.')
         self.k = k
-        self.data = data
+        self.data = knn_data_structure
 
     def classify(self, song):
         genre_frequencies = {}
-        for feature_vector in song.values:
+        for feature_vector in song:
             genres = self.data.query(feature_vector, self.k)
             for genre in genres:
                 genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
         return max(genre_frequencies, key=genre_frequencies.get)
 
 
-    class KnnDataStructure:
-        __metaclass__ = ABCMeta
+class KnnDataStructure:
+    __metaclass__ = ABCMeta
 
-        @abstractmethod
-        def query(self, feature_vector, k):
-            raise NotImplementedError
+    @abstractmethod
+    def query(self, feature_vector, k):
+        raise NotImplementedError
+
+
+class KDTreeDataStructure(KnnDataStructure):
+    def __init__(self, songs, genres):
+        self.kd_tree = nb.KDTree(np.vstack(songs))
+        self.genres = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                self.genres.append(genre)
+
+    def query(self, feature_vector, k):
+        indices = self.kd_tree.query([feature_vector], k, return_distance=False)
+        logging.debug('Neighbours: {}'.format(indices))
+        return [self.genres[i] for i in indices[0]]
+
+
+class ConfusionMatrix:
+    def __init__(self, genres):
+        self.dic = {}
+        for g1 in genres:
+            self.dic[g1] = {}
+            for g2 in genres:
+                self.dic[g1][g2] = 0
+
+    def add_genres(self, actual_genre, predicted_genre):
+        self.dic[actual_genre][predicted_genre] += 1
+
+    def save_to_csv(self, filename):
+        with open(filename, "wb") as f:
+            writer = csv.writer(f)
+            writer.writerow(self.dic.keys())  # Header
+            for genre in self.dic.keys():
+                writer.writerow(self.dic[genre])
