@@ -6,12 +6,13 @@ from abc import ABCMeta, abstractmethod
 
 import numpy as np
 import pandas as pd
+import time
 from lshash import LSHash
 from scipy.spatial import KDTree
 
 import sklearn.neighbors as nb
 
-from gaussian import NaiveGaussianGenreModel, GaussianSongClassifier
+from classifiers import GaussianSongClassifier
 
 
 def load_labels():
@@ -33,8 +34,8 @@ def classify_gaussian():
             song_sample = song.values
             song_samples.append(song_sample)
         song_samples_matrix = np.vstack(song_samples)  # TODO: Average by length of each song? Now: favors longer songs.
-        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
-        genre_models.append(genre_model)
+        # genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        # genre_models.append(genre_model)
 
     classifier = GaussianSongClassifier(genre_models)
 
@@ -103,8 +104,8 @@ def classify_gaussian_kaggle():
         # print('Training genre {}'.format(genre))
         # print('SAMPLES: {}'.format(song_samples_matrix))
         # print('SAMPLES size: {}'.format(song_samples_matrix.shape))
-        genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
-        genre_models.append(genre_model)
+        # genre_model = NaiveGaussianGenreModel(genre, song_samples_matrix)
+        # genre_models.append(genre_model)
 
     classifier = GaussianSongClassifier(genre_models)
 
@@ -310,6 +311,7 @@ def classify_nearest_neighbor_kd_tree(k):
 
 
 def classify_nearest_neighbor_kd_tree_sk(k):
+    print('k = {}'.format(k))
     labels = load_labels()
 
     song_samples = []
@@ -338,14 +340,14 @@ def classify_nearest_neighbor_kd_tree_sk(k):
             song_id = val[0]
             song = pd.read_csv('song_data/training/{}'.format(song_id), header=None)
             genre_freqs = {}
-
+            # s = np.mean(song)
             # split_song = np.array_split(song, 5, axis=0)  # Split song into sections
             for s in song.values:
                 # avg_song_val = np.mean(s)  # Take average of each section
                 genre_indices = kd_tree.query([s], k, return_distance=False)
                 for index in genre_indices[0]:
-                    genre = indexed_genres[index]
-                    genre_freqs[genre] = genre_freqs.get(genre, 0) + 1
+                    g = indexed_genres[index]
+                    genre_freqs[g] = genre_freqs.get(g, 0) + 1
 
             actual_genre = max(genre_freqs, key=genre_freqs.get)
             print('Predicted genre: {}'.format(actual_genre))
@@ -354,8 +356,22 @@ def classify_nearest_neighbor_kd_tree_sk(k):
                 match_count += 1
 
     print('Matched {} out of {} songs: {}%'.format(match_count, total_count, (match_count / total_count) * 100))
-    # k = 5: Matched 116 out of 758 songs: 15.3034300792%
-    # k = 3: Matched 134 out of 758 songs: 17.6781002639%
+    # Average
+    # k = 1: Matched 198 out of 758 songs: 26.1213720317%
+    # 3: Matched 215 out of 758 songs: 28.364116095%
+    # 100: Matched 292 out of 758 songs: 38.5224274406%
+
+    # Non Average:
+    # k = 1: Matched 447 out of 758 songs: 58.9709762533%
+    # k = 2: Matched 455 out of 758 songs: 60.0263852243%
+    # k = 3: Matched 455 out of 758 songs: 60.0263852243%
+    # k = 4: Matched 450 out of 758 songs: 59.3667546174%
+    # k = 5: Matched 451 out of 758 songs: 59.4986807388%
+    # k = 10: Matched 440 out of 758 songs: 58.0474934037%
+    # k = 100: Matched 415 out of 758 songs: 54.7493403694%
+
+
+
 
 
 def classify_nearest_neighbor_ball_tree(k):
@@ -407,16 +423,24 @@ def classify_nearest_neighbor_ball_tree(k):
 
 
 if __name__ == '__main__':
+    t = time.time()
+
     # classify_gaussian()
     # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
     # classify_nearest_neighbor_lsh(5)
     # classify_nearest_neighbor_kd_tree(5)
-    classify_nearest_neighbor_kd_tree_sk(3)
+    classify_nearest_neighbor_kd_tree_sk(5)
     # classify_nearest_neighbor_ball_tree(5)
     # classify_gaussian_kaggle()
     # test_lsh(5)
 
     # Conclusion: sklearn KD tree performs the best
+    # Rule of thumb: k = sqrt(N) where N is training examples, so k = 1171
     # TODO: If time permits, implement own version of KD Tree...
     # TODO: Re-organize all these methods to use some kind of interface...
     # TODO: Play around with different values of k (using 5 now)
+    # TODO: When doing knn for some k, also compute for all k_i < k (around same time complexity...)
+    # TODO: Do 70/30 training/test split instead
+    # TODO: Do k-fold cross validation
+
+    print('Total runtime: {}'.format(time.time() - t))

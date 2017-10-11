@@ -1,5 +1,5 @@
 /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/bin/python2.7 /Users/seanstappas1/PycharmProjects/music-classification/data_loader.py
-k = 3
+k = 5
 Indexing genre: classical
 Indexing genre: country
 Indexing genre: edm_dance
@@ -89,7 +89,7 @@ Predicted genre: classical
 Predicted genre: country
 Predicted genre: metal
 Predicted genre: country
-Predicted genre: jazz
+Predicted genre: country
 Predicted genre: country
 Predicted genre: country
 Predicted genre: country
@@ -133,9 +133,9 @@ Predicted genre: country
 Predicted genre: country
 Predicted genre: metal
 Predicted genre: country
-Predicted genre: metal
+Predicted genre: country
 Predicted genre: jazz
-Predicted genre: country
+Predicted genre: latin
 Predicted genre: latin
 Predicted genre: country
 Predicted genre: metal
@@ -146,7 +146,7 @@ Predicted genre: country
 Predicted genre: latin
 Predicted genre: metal
 Predicted genre: country
-Predicted genre: country
+Predicted genre: classical
 Predicted genre: country
 Predicted genre: jazz
 Predicted genre: country
@@ -171,7 +171,7 @@ Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
-Predicted genre: rock
+Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
@@ -199,7 +199,7 @@ Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
-Predicted genre: latin
+Predicted genre: jazz
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: jazz
@@ -237,7 +237,7 @@ Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
-Predicted genre: rnb
+Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Expected genre: jazz
@@ -300,7 +300,7 @@ Predicted genre: jazz
 Predicted genre: jazz
 Predicted genre: jazz
 Predicted genre: jazz
-Predicted genre: jazz
+Predicted genre: classical
 Predicted genre: jazz
 Predicted genre: jazz
 Predicted genre: jazz
@@ -361,7 +361,7 @@ Predicted genre: kids
 Predicted genre: edm_dance
 Predicted genre: kids
 Predicted genre: metal
-Predicted genre: metal
+Predicted genre: country
 Predicted genre: classical
 Predicted genre: latin
 Predicted genre: latin
@@ -391,7 +391,7 @@ Predicted genre: classical
 Predicted genre: classical
 Predicted genre: kids
 Predicted genre: classical
-Predicted genre: country
+Predicted genre: metal
 Predicted genre: latin
 Predicted genre: classical
 Predicted genre: latin
@@ -414,8 +414,27 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
+Predicted genre: edm_dance
+Predicted genre: metal
 Predicted genre: latin
-Predicted genre: country
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: edm_dance
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
+Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
@@ -449,25 +468,6 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
-Predicted genre: latin
 Predicted genre: edm_dance
 Predicted genre: latin
 Predicted genre: latin
@@ -476,7 +476,7 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
-Predicted genre: latin
+Predicted genre: edm_dance
 Predicted genre: latin
 Predicted genre: latin
 Expected genre: metal
@@ -511,7 +511,7 @@ Predicted genre: metal
 Predicted genre: metal
 Predicted genre: metal
 Predicted genre: metal
-Predicted genre: classical
+Predicted genre: metal
 Predicted genre: metal
 Predicted genre: metal
 Predicted genre: metal
@@ -571,7 +571,7 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
-Predicted genre: latin
+Predicted genre: rnb
 Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: latin
@@ -610,16 +610,16 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: rnb
 Predicted genre: latin
-Predicted genre: rock
-Predicted genre: latin
+Predicted genre: metal
+Predicted genre: edm_dance
 Predicted genre: edm_dance
 Predicted genre: latin
-Predicted genre: rock
+Predicted genre: country
 Predicted genre: rock
 Predicted genre: latin
 Predicted genre: metal
 Predicted genre: latin
-Predicted genre: country
+Predicted genre: jazz
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: metal
@@ -631,7 +631,7 @@ Predicted genre: rock
 Predicted genre: rnb
 Predicted genre: edm_dance
 Expected genre: rnb
-Predicted genre: rnb
+Predicted genre: latin
 Predicted genre: edm_dance
 Predicted genre: rnb
 Predicted genre: latin
@@ -643,7 +643,7 @@ Predicted genre: latin
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: edm_dance
-Predicted genre: rnb
+Predicted genre: latin
 Predicted genre: classical
 Predicted genre: latin
 Predicted genre: rnb
@@ -655,7 +655,7 @@ Predicted genre: country
 Predicted genre: latin
 Predicted genre: rnb
 Predicted genre: latin
-Predicted genre: rnb
+Predicted genre: jazz
 Predicted genre: rnb
 Predicted genre: rnb
 Predicted genre: rnb
@@ -668,7 +668,7 @@ Predicted genre: rnb
 Predicted genre: latin
 Predicted genre: rnb
 Predicted genre: metal
-Predicted genre: rnb
+Predicted genre: latin
 Predicted genre: rnb
 Predicted genre: latin
 Predicted genre: metal
@@ -698,7 +698,7 @@ Predicted genre: latin
 Predicted genre: rnb
 Predicted genre: jazz
 Predicted genre: edm_dance
-Predicted genre: latin
+Predicted genre: rnb
 Predicted genre: latin
 Predicted genre: latin
 Predicted genre: jazz
@@ -722,7 +722,7 @@ Predicted genre: rock
 Predicted genre: metal
 Predicted genre: metal
 Predicted genre: jazz
-Predicted genre: country
+Predicted genre: metal
 Predicted genre: rock
 Predicted genre: latin
 Predicted genre: metal
@@ -778,6 +778,7 @@ Predicted genre: latin
 Predicted genre: metal
 Predicted genre: country
 Predicted genre: country
-Matched 455 out of 758 songs: 60.0263852243%
+Matched 451 out of 758 songs: 59.4986807388%
+Total runtime: 1897.97642207
 
 Process finished with exit code 0
