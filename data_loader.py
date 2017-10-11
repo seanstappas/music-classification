@@ -369,6 +369,10 @@ def classify_nearest_neighbor_kd_tree_sk(k):
     # k = 5: Matched 451 out of 758 songs: 59.4986807388%
     # k = 10: Matched 440 out of 758 songs: 58.0474934037%
     # k = 100: Matched 415 out of 758 songs: 54.7493403694%
+    # k = 500: Matched 384 out of 758 songs: 50.6596306069%
+    # k = 1171: Matched 364 out of 758 songs: 48.0211081794%
+
+
 
 
 
