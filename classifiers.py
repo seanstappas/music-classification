@@ -167,7 +167,7 @@ class ConfusionMatrix:
         with open(filename, "wb") as f:
             writer = csv.writer(f)
             genres = self.dic.keys()
-            writer.writerow(genres)  # Header
+            writer.writerow([' '] + genres)  # Header
             for genre in genres:
                 logging.info('Predicted genres: {}'.format(self.dic[genre].keys()))
-                writer.writerow(self.dic[genre].values())
+                writer.writerow([genre] + self.dic[genre].values())
