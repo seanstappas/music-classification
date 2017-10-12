@@ -105,10 +105,13 @@ class GaussianGenreModel:
 
 
 class KnnSongClassifier(SongClassifier):
-    def __init__(self, k, knn_data_structure):
+    def __init__(self, k, songs, genres, data_structure='kd_tree'):
         logging.info('Constructing kNN classifier.')
         self.k = k
-        self.data = knn_data_structure
+        if data_structure == 'kd_tree':
+            self.data = KDTreeDataStructure(songs, genres)
+        else:
+            self.data = SimpleDataStructure(songs, genres)
 
     def classify(self, song):
         genre_frequencies = {}
@@ -125,6 +128,14 @@ class KnnDataStructure:
     @abstractmethod
     def query(self, feature_vector, k):
         raise NotImplementedError
+
+
+class SimpleDataStructure(KnnDataStructure):
+    def __init__(self, songs, genres):
+        pass  # TODO: Implement simple kNN data structure
+
+    def query(self, feature_vector, k):
+        return []
 
 
 class KDTreeDataStructure(KnnDataStructure):
@@ -155,6 +166,8 @@ class ConfusionMatrix:
     def save_to_csv(self, filename):
         with open(filename, "wb") as f:
             writer = csv.writer(f)
-            writer.writerow(self.dic.keys())  # Header
-            for genre in self.dic.keys():
-                writer.writerow(self.dic[genre])
+            genres = self.dic.keys()
+            writer.writerow(genres)  # Header
+            for genre in genres:
+                logging.info('Predicted genres: {}'.format(self.dic[genre].keys()))
+                writer.writerow(self.dic[genre].values())
