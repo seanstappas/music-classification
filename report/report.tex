@@ -38,6 +38,7 @@
 	\twocolumn
 	
 	\section{What assumptions about the data do we make when we model the data using a Gaussian distribution?}
+	% Several key assumptions are stated.	
 	% TODO: See 14.3, 20.2.3
 	% Good reference: http://scikit-learn.org/stable/modules/neighbors.html
 	
@@ -51,18 +52,21 @@
 	
 	
 	\section{When do you expect that a Gaussian will work well and when do you think it will not work well?}
+	% Several situations are given, with elaborate discussion of the factors that make one classifier better than the other.
 	
 	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values.
 	
 	Secondly, if the feature vector distributions of two genres are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two genres.
 	
 	\section{What values of $k$ work best for the kNN classifier?}
+	% A value of k is stated, with a graph showing the results of different experiments.
 	
 	A common rule-of-thumb for the value of $k$ is that it should be equal to $\sqrt{N}$, where $N$ is the number of training samples. % TODO: Cite here
 	
 	After testing on various values of $k$, the best one was found to be % TODO: Show plot/table comparing values of k, choose best one
 	
 	\section{Based on your results from this assignment, which classifier (Gaussian or kNN) works best for the task of Music Genre Classification? Why?}
+	% A classifier is stated as best, with elaboration on why, and with supporting evidence.
 	
 	The results of both classifiers can be seen in % TODO: accuracy for Gaussian and kNN
 	
