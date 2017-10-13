@@ -3,25 +3,8 @@ from __future__ import division
 import logging
 import time
 
-import pandas as pd
-
-from classifiers import GaussianSongClassifier, KnnSongClassifier, KDTreeDataStructure
-
-
-def load_labels():
-    return pd.read_csv('song_data/labels.csv')
-
-
-def get_training_songs_genres():
-    logging.info('Building training and test set.')
-    labels_genres = load_labels()
-    song_ids = labels_genres['id'].values
-    songs = []
-    for song_id in song_ids:
-        song = pd.read_csv('song_data/training/{}'.format(song_id)).values
-        songs.append(song)
-    genres = labels_genres['category'].values
-    return songs, genres
+from classifiers import GaussianSongClassifier, KnnSongClassifier
+from data_extractor import get_training_songs_genres, PREDICTION_DIRECTORY, DATA_DIRECTORY
 
 
 def split_in_two(l, first=50, second=50):
@@ -60,15 +43,12 @@ def test_songs_knn(k):
                  .format(num_matches, num_test_songs, (num_matches / num_test_songs) * 100))
 
 
-PREDICTION_DIRECTORY = 'song_data/test/'
-
-
 def predict_songs_knn(k):
     songs, genres = get_training_songs_genres()
 
     classifier = GaussianSongClassifier(songs, genres)
 
-    classifier.predict_directory(PREDICTION_DIRECTORY, 'song_data/test_labels_knn.csv')
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_knn.csv'.format(DATA_DIRECTORY))
 
 
 if __name__ == '__main__':

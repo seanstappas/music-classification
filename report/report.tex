@@ -58,13 +58,20 @@
 	
 	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values.
 	
+	% TODO: Non-symmetric example (metal4, metal5)
+	
 	An example where a Gaussian model would not be appropriate is if, within a genre, there are multiple clusters of values. Here, multiple Gaussian distributions may be appropriate, but certainly not one.
 	
-	% TODO: Show clustering of genres
+	% TODO: Show clustering of genres. (e.g.: jazz19, jazz34, kids1, kids10, kids11, kids12, kids13, kids14, kids15, kids16, kids17)
 	
 	Secondly, if the feature vector distributions of two genres are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two genres.
 	
 	% TODO: Show similarity of genres
+	
+	Also, a Gaussian classifier will not work well for values that stray too far from the mean. In situations like this, kNN has the clear advantage.
+	
+	% TODO: Show extreme values
+	
 	
 	\section{What values of $k$ work best for the kNN classifier?}
 	% A value of k is stated, with a graph showing the results of different experiments.
