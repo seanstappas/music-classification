@@ -48,3 +48,22 @@ def get_songs_genre(desired_genre='classical', num_songs=1):
             song = pd.read_csv('{}{}'.format(TRAINING_DIRECTORY, song_id)).values
             songs.append(song)
     return songs
+
+
+def get_songs_genres(desired_genres=('latin', 'rnb'), num_songs_per_genre=10):
+    logging.info('Building training and test set.')
+    labels_genres = pd.read_csv('{}labels.csv'.format(DATA_DIRECTORY))
+    song_ids = labels_genres['id'].values
+    genres = labels_genres['category'].values
+    genres_to_songs = {}
+    song_nums = {}
+    for g in desired_genres:
+        genres_to_songs[g] = []
+        song_nums[g] = 0
+    for song_id, genre in zip(song_ids, genres):
+        if genre in desired_genres:
+            if song_nums[genre] < num_songs_per_genre:
+                song = pd.read_csv('{}{}'.format(TRAINING_DIRECTORY, song_id)).values
+                genres_to_songs[genre].append(song)
+                song_nums[genre] += 1
+    return genres_to_songs

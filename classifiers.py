@@ -106,7 +106,7 @@ class GaussianGenreModel:
 
 class KnnSongClassifier(SongClassifier):
     def __init__(self, k, songs, genres, data_structure='kd_tree'):
-        logging.info('Constructing kNN classifier.')
+        logging.info('Constructing kNN classifier (k={}).'.format(k))
         self.k = k
         if data_structure == 'kd_tree':
             self.data = KDTreeDataStructure(songs, genres)
