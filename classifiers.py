@@ -3,6 +3,8 @@ import logging
 import os
 from abc import ABCMeta, abstractmethod
 from sklearn import svm
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 
 import numpy as np
 import pandas as pd
@@ -143,6 +145,46 @@ class SvmSongClassifier(SongClassifier):
         return max(genre_frequencies, key=genre_frequencies.get)
 
 
+class NaiveBayesSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing Naive Bayes classifier.')
+        self.classifier = GaussianNB()
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
+class NeuralNetworkSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing Neural Network classifier.')
+        self.classifier = MLPClassifier()
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
 class KnnDataStructure:
     __metaclass__ = ABCMeta
 
@@ -190,5 +232,5 @@ class ConfusionMatrix:
             genres = self.dic.keys()
             writer.writerow([' '] + genres)  # Header
             for genre in genres:
-                logging.info('Predicted genres: {}'.format(self.dic[genre].keys()))
+                logging.debug('Predicted genres: {}'.format(self.dic[genre].keys()))
                 writer.writerow([genre] + self.dic[genre].values())
