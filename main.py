@@ -109,6 +109,14 @@ def predict_songs_knn(k):
     classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_knn_{}.csv'.format(DATA_DIRECTORY, k))
 
 
+def predict_songs_neural():
+    songs, genres = get_training_songs_genres()
+
+    classifier = NeuralNetworkSongClassifier(songs, genres)
+
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_neural_network.csv'.format(DATA_DIRECTORY))
+
+
 if __name__ == '__main__':
     t = time.time()
 
@@ -121,9 +129,10 @@ if __name__ == '__main__':
     # test_songs_knn(1)
     # test_songs_svm()
     # test_songs_naive_bayes()
-    test_songs_neural_network()
+    # test_songs_neural_network()
 
     # predict_songs_knn(2)
+    predict_songs_neural()
 
     # TODO: use k-fold cross-validation
 
