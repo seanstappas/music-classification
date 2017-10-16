@@ -1,11 +1,12 @@
 import csv
 import logging
-from abc import ABCMeta, abstractmethod
-
-import pandas as pd
-import numpy as np
-import sklearn.neighbors as nb
 import os
+from abc import ABCMeta, abstractmethod
+from sklearn import svm
+
+import numpy as np
+import pandas as pd
+import sklearn.neighbors as nb
 
 
 class SongClassifier:
@@ -119,6 +120,26 @@ class KnnSongClassifier(SongClassifier):
             genres = self.data.query(feature_vector, self.k)
             for genre in genres:
                 genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
+class SvmSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing SVM classifier.')
+        self.classifier = svm.SVC()
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
         return max(genre_frequencies, key=genre_frequencies.get)
 
 
