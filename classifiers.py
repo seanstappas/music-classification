@@ -2,17 +2,17 @@ import csv
 import logging
 import os
 from abc import ABCMeta, abstractmethod
-from sklearn import svm
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 import numpy as np
 import pandas as pd
 import sklearn.neighbors as nb
+from sklearn import svm
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
 
 
 class SongClassifier:
@@ -259,10 +259,21 @@ class KnnDataStructure:
 
 class SimpleDataStructure(KnnDataStructure):
     def __init__(self, songs, genres):
-        pass  # TODO: Implement simple kNN data structure
+        self.feature_vectors = np.vstack(songs)
+        self.genres = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                self.genres.append(genre)
 
     def query(self, feature_vector, k):
+        genre_distances = []
+        for v, genre in zip(self.feature_vectors, self.genres):
+            genre_distances.append(euclidean_distance(v, feature_vector))
         return []
+
+
+def euclidean_distance(a, b):
+    return np.linalg.norm(a - b)
 
 
 class KDTreeDataStructure(KnnDataStructure):
