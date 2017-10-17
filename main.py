@@ -4,7 +4,7 @@ import logging
 import time
 
 from classifiers import GaussianSongClassifier, KnnSongClassifier, SvmSongClassifier, NaiveBayesSongClassifier, \
-    NeuralNetworkSongClassifier
+    NeuralNetworkSongClassifier, GaussianProcessSongClassifier, AdaSongClassifier, QdaSongClassifier
 from data_extractor import get_training_songs_genres, PREDICTION_DIRECTORY, DATA_DIRECTORY
 
 
@@ -114,7 +114,38 @@ def predict_songs_neural():
 
     classifier = NeuralNetworkSongClassifier(songs, genres)
 
-    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_neural_network.csv'.format(DATA_DIRECTORY))
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_neural_net.csv'.format(DATA_DIRECTORY))
+
+
+def predict_songs_svm():
+    songs, genres = get_training_songs_genres()
+
+    classifier = NeuralNetworkSongClassifier(songs, genres)
+
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_svm.csv'.format(DATA_DIRECTORY))
+
+def predict_songs_gaussian_process():
+    songs, genres = get_training_songs_genres()
+
+    classifier = GaussianProcessSongClassifier(songs, genres)
+
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_gaussian_process.csv'.format(DATA_DIRECTORY))
+
+
+def predict_songs_ada():
+    songs, genres = get_training_songs_genres()
+
+    classifier = AdaSongClassifier(songs, genres)
+
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_gaussian_ada.csv'.format(DATA_DIRECTORY))
+
+
+def predict_songs_qda():
+    songs, genres = get_training_songs_genres()
+
+    classifier = QdaSongClassifier(songs, genres)
+
+    classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_gaussian_qda.csv'.format(DATA_DIRECTORY))
 
 
 if __name__ == '__main__':
@@ -132,7 +163,11 @@ if __name__ == '__main__':
     # test_songs_neural_network()
 
     # predict_songs_knn(2)
-    predict_songs_neural()
+    # predict_songs_neural()
+    # predict_songs_svm()
+    # predict_songs_gaussian_process()
+    # predict_songs_ada()
+    predict_songs_qda()
 
     # TODO: use k-fold cross-validation
 

@@ -68,50 +68,13 @@
 	
 	% Examples of Gaussian working well: classical7
 	
-	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values. For example, if the distribution is not symmetric, a Gaussian model will not work well. This can be seen in \autoref{fig:metal_non_symmetric}, where two features were plotted against each other for ten songs from the ``metal'' genre.
+	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values. For example, if the distribution is not symmetric, a Gaussian model will not work well.
 	
-	% Non-symmetric examples: metal4, metal5
+	An example where a Gaussian model would not be appropriate is if, within a genre, there are multiple clusters of values. Here, multiple Gaussian distributions may be appropriate, but certainly not one.
 	
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[width=\columnwidth]{plots/metal_non_symmetric.pdf}
-		\caption
-		{Projection of feature 0 vs. feature 8 for 10 songs from the ``metal'' genre. The distribution is not symmetric.}
-		\label{fig:metal_non_symmetric}
-	\end{figure}
+	Secondly, if the feature vector distributions of two genres are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two genres.
 	
-	An example where a Gaussian model would not be appropriate is if, within a genre, there are multiple clusters of values. Here, multiple Gaussian distributions may be appropriate, but certainly not one. This can be seen in \autoref{fig:kids_cluster}, where two features were plotted against each other for ten songs from the ``kids'' genre.
-	
-	% Clustering examples: jazz19, jazz34, kids1, kids10, kids11, kids12, kids13, kids14, kids15, kids16, kids17
-	
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[width=\columnwidth]{plots/kids_cluster.pdf}
-		\caption
-		{Projection of feature 1 vs. feature 2 for 10 songs from the ``kids'' genre. Two separate clusters of values can be seen, on the left and the right.}
-		\label{fig:kids_cluster}
-	\end{figure}
-	
-	Secondly, if the feature vector distributions of two genres are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two genres. This can be seen in \autoref{fig:latin_rnb_similarity}, where the ``latin'' and ``rnb'' genres have very similar distributions.
-	
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[width=\columnwidth]{plots/latin_rnb_similarity.pdf}
-		\caption
-		{Projection of feature 1 vs. feature 9 for 5 songs from the ``latin'' genre and 5 songs from the ``rnb'' genre. The distributions are very similar.}
-		\label{fig:latin_rnb_similarity}
-	\end{figure}
-	
-	Also, a Gaussian classifier will not work well for values that stray too far from the mean. In situations like this, kNN has the clear advantage. This can be seen in \autoref{fig:latin_extreme}, where two features were plotted against each other for ten songs from the ``latin'' genre.
-	
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[width=\columnwidth]{plots/latin_extreme.pdf}
-		\caption
-		{Projection of feature 1 vs. feature 2 for 10 songs from the ``latin'' genre. There are many extreme values for which kNN would have an easier time classifying than Gaussian.}
-		\label{fig:latin_extreme}
-	\end{figure}
-	
+	Also, a Gaussian classifier will not work well for values that stray too far from the mean. In situations like this, kNN has the clear advantage.
 	
 	\section{What values of $k$ work best for the kNN classifier?}
 	% A value of k is stated, with a graph showing the results of different experiments.
@@ -141,7 +104,51 @@
 	
 	Based on the above results, the kNN classifier works best for music classification. This can be attributed to the simple fact that the Gaussian classifier retains much less information than the kNN for each genre. While the Gaussian classifier only stores a 12x12 covariance matrix and 12x1 mean vector for each genre, the kNN classifier stores every training example and uses these examples to predict every genre. This additional information can allow the kNN classifier to classify new songs with much greater accuracy. 
 	
-	Also, kNN can take into account very complex distributions of feature vectors, whereas the Gaussian classifier will attempt to fit a Gaussian distribution to the data set, which may not be appropriate.
+	Also, kNN can take into account very complex distributions of feature vectors, whereas the Gaussian classifier will attempt to fit a Gaussian distribution to the data set, which may not be appropriate. This can be attributed to all the reasons discussed in Question 2.
+	
+	For example, non-symmetric data is hard to model with a Gaussian distribution. An example of this can be seen in \autoref{fig:metal_non_symmetric}, where two features were plotted against each other for ten songs from the ``metal'' genre.
+	
+	% Non-symmetric examples: metal4, metal5
+	
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[width=\columnwidth]{plots/metal_non_symmetric.pdf}
+		\caption
+		{Projection of feature 0 vs. feature 8 for 10 songs from the ``metal'' genre. The distribution is not symmetric.}
+		\label{fig:metal_non_symmetric}
+	\end{figure}
+
+	Also, there are examples of genres where there are multiple clusters of data, which are hard to model with a single Gaussian. This can be seen in \autoref{fig:kids_cluster}, where two features were plotted against each other for ten songs from the ``kids'' genre.
+	
+	% Clustering examples: jazz19, jazz34, kids1, kids10, kids11, kids12, kids13, kids14, kids15, kids16, kids17
+	
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[width=\columnwidth]{plots/kids_cluster.pdf}
+		\caption
+		{Projection of feature 1 vs. feature 2 for 10 songs from the ``kids'' genre. Two separate clusters of values can be seen, on the left and the right.}
+		\label{fig:kids_cluster}
+	\end{figure}
+
+	There are also genres with very similar distributions which cannot be easily differentiated with a Gaussian classifier. This can be seen in \autoref{fig:latin_rnb_similarity}, where the ``latin'' and ``rnb'' genres have very similar distributions.
+	
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[width=\columnwidth]{plots/latin_rnb_similarity.pdf}
+		\caption
+		{Projection of feature 1 vs. feature 9 for 5 songs from the ``latin'' genre and 5 songs from the ``rnb'' genre. The distributions are very similar.}
+		\label{fig:latin_rnb_similarity}
+	\end{figure}
+	
+	Finally, distributions with many extreme values cannot easily be classified with a Gaussian. This can be seen in \autoref{fig:latin_extreme}, where two features were plotted against each other for ten songs from the ``latin'' genre.
+	
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[width=\columnwidth]{plots/latin_extreme.pdf}
+		\caption
+		{Projection of feature 1 vs. feature 2 for 10 songs from the ``latin'' genre. There are many extreme values for which kNN would have an easier time classifying than Gaussian.}
+		\label{fig:latin_extreme}
+	\end{figure}
 	
 	% 
 	

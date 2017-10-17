@@ -5,6 +5,10 @@ from abc import ABCMeta, abstractmethod
 from sklearn import svm
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neural_network import MLPClassifier
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 import numpy as np
 import pandas as pd
@@ -128,7 +132,7 @@ class KnnSongClassifier(SongClassifier):
 class SvmSongClassifier(SongClassifier):
     def __init__(self, songs, genres):
         logging.info('Constructing SVM classifier.')
-        self.classifier = svm.SVC()
+        self.classifier = svm.SVC(gamma=2, C=1)
         x = np.vstack(songs)
         y = []
         for song, genre in zip(songs, genres):
@@ -168,7 +172,67 @@ class NaiveBayesSongClassifier(SongClassifier):
 class NeuralNetworkSongClassifier(SongClassifier):
     def __init__(self, songs, genres):
         logging.info('Constructing Neural Network classifier.')
-        self.classifier = MLPClassifier()
+        self.classifier = MLPClassifier(alpha=1)
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
+class GaussianProcessSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing Gaussian Process classifier.')
+        self.classifier = GaussianProcessClassifier(1.0 * RBF(1.0), warm_start=True)
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
+class AdaSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing ADA classifier.')
+        self.classifier = AdaBoostClassifier()
+        x = np.vstack(songs)
+        y = []
+        for song, genre in zip(songs, genres):
+            for _ in song:
+                y.append(genre)
+        logging.info('Fitting feature vectors to genres.')
+        self.classifier.fit(x, y)
+
+    def classify(self, song):
+        genre_frequencies = {}
+        for feature_vector in song:
+            genre = self.classifier.predict([feature_vector])[0]
+            genre_frequencies[genre] = genre_frequencies.get(genre, 0) + 1
+        return max(genre_frequencies, key=genre_frequencies.get)
+
+
+class QdaSongClassifier(SongClassifier):
+    def __init__(self, songs, genres):
+        logging.info('Constructing QDA classifier.')
+        self.classifier = QuadraticDiscriminantAnalysis()
         x = np.vstack(songs)
         y = []
         for song, genre in zip(songs, genres):
