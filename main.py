@@ -237,7 +237,7 @@ if __name__ == '__main__':
     # predict_songs_qda()
 
     # test_songs_gaussian_k_fold(10)
-    test_songs_knn_k_fold(9, 10)
+    test_songs_knn_k_fold(10, 10)
 
     # TODO: use k-fold cross-validation
 
