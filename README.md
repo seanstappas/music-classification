@@ -16,3 +16,7 @@ python main.py
 ## Code Organization
 
 The code relating to all the different classifiers used can be found in the `classifiers.py` file.
+
+## Report
+
+The report (`report.pdf`) and all related files (tex, plots and CSV files) can be found in the `report` directory.
