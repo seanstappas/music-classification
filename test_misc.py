@@ -14,6 +14,7 @@ from scipy.spatial import KDTree
 import sklearn.neighbors as nb
 
 from classifiers import GaussianSongClassifier, KnnSongClassifier, KDTreeDataStructure
+from main import split_in_k
 
 
 def load_labels():
@@ -498,10 +499,10 @@ if __name__ == '__main__':
     # classify_songs_gaussian()
     # test_songs_knn(3)
 
-    predict_songs_knn(3)
+    # predict_songs_knn(3)
 
     # classify_gaussian()
-    # classify_nearest_neighbor(5)  # TODO: Implement LSH or k-d tree (too slow now...)
+    # classify_nearest_neighbor(5)
     # classify_nearest_neighbor_lsh(5)
     # classify_nearest_neighbor_kd_tree(5)
     # classify_nearest_neighbor_kd_tree_sk(5)
@@ -509,13 +510,42 @@ if __name__ == '__main__':
     # classify_gaussian_kaggle()
     # test_lsh(5)
 
+    lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    split_list = split_in_k(lst, 4)
+    print(split_list)
+
+    songs, genres = ['song1', 'song2', 'song3'], ['genre1', 'genre2', 'genre3']
+    k_fold = 2
+
+    split_songs = split_in_k(songs, k_fold)
+    split_genres = split_in_k(genres, k_fold)
+
+    print(split_songs)
+    print(split_genres)
+
+    for i in range(k_fold):
+
+        # Concatenate all the k_fold - 1 lists
+
+        lst1 = []
+        for j in range(k_fold):
+            if j != i:
+                lst1.append(split_songs[j])
+            else:
+                lst1.append([])
+
+        lst1 = sum(lst1, [])
+
+        print(lst1)
+
+        training_songs = sum([split_songs[j] if j != i else [] for j in range(k_fold)], [])
+        training_genres = sum([split_genres[j] if j != i else [] for j in range(k_fold)], [])
+
+        print('k = {}'.format(i))
+        print(training_songs)
+        print(training_genres)
+
     # Conclusion: sklearn KD tree performs the best
     # Rule of thumb: k = sqrt(N) where N is training examples, so k = 1171
-    # TODO: If time permits, implement own version of KD Tree...
-    # TODO: Re-organize all these methods to use some kind of interface...
-    # TODO: Play around with different values of k (using 5 now)
-    # TODO: When doing knn for some k, also compute for all k_i < k (around same time complexity...)
-    # TODO: Do 70/30 training/test split instead
-    # TODO: Do k-fold cross validation
 
     print('Total runtime: {}'.format(time.time() - t))

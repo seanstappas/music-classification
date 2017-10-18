@@ -17,7 +17,7 @@ def get_training_songs_genres(num_songs=None):
             break
         song = pd.read_csv('{}{}'.format(TRAINING_DIRECTORY, song_id)).values
         songs.append(song)
-    genres = labels_genres['category'].values
+    genres = labels_genres['category'].values.tolist()
     return songs, genres
 
 

@@ -13,7 +13,73 @@ def split_in_two(l, ratio=0.5):
     return l[:split_index], l[split_index:]
 
 
-def classify_songs_gaussian():
+def split_in_k(l, k):
+    split_index = len(l) // k
+    return [l[split_index*i:split_index*i + split_index] if i < k - 1 else l[split_index*i:] for i in range(k)]
+
+
+def test_songs_gaussian_k_fold(k_fold):
+    songs, genres = get_training_songs_genres()
+
+    split_songs = split_in_k(songs, k_fold)
+    split_genres = split_in_k(genres, k_fold)
+
+    accuracies = []
+
+    for i in range(k_fold):
+        # Concatenate all the k_fold - 1 lists
+        training_songs = sum([split_songs[j] if j != i else [] for j in range(k_fold)], [])
+        training_genres = sum([split_genres[j] if j != i else [] for j in range(k_fold)], [])
+
+        test_songs = split_songs[i]
+        test_genres = split_genres[i]
+
+        classifier = GaussianSongClassifier(training_songs, training_genres)
+
+        num_matches, _ = classifier.test(test_songs, test_genres)
+        num_test_songs = len(test_songs)
+
+        accuracy = (num_matches / num_test_songs) * 100
+        accuracies.append(accuracy)
+
+        logging.info('[k-fold iteration #{}] Matched {} out of {} songs, accuracy: {}%'
+                     .format(i, num_matches, num_test_songs, accuracy))
+
+    logging.info('Average accuracy for Gaussian (k_fold={}): {}'.format(k_fold, sum(accuracies) / len(accuracies)))
+
+
+def test_songs_knn_k_fold(k, k_fold):
+    songs, genres = get_training_songs_genres()
+
+    split_songs = split_in_k(songs, k_fold)
+    split_genres = split_in_k(genres, k_fold)
+
+    accuracies = []
+
+    for i in range(k_fold):
+
+        # Concatenate all the k_fold - 1 lists
+        training_songs = sum([split_songs[j] if j != i else [] for j in range(k_fold)], [])
+        training_genres = sum([split_genres[j] if j != i else [] for j in range(k_fold)], [])
+
+        test_songs = split_songs[i]
+        test_genres = split_genres[i]
+
+        classifier = KnnSongClassifier(k, training_songs, training_genres)
+
+        num_matches, _ = classifier.test(test_songs, test_genres)
+        num_test_songs = len(test_songs)
+
+        accuracy = (num_matches / num_test_songs) * 100
+        accuracies.append(accuracy)
+
+        logging.info('[k-fold iteration #{}] Matched {} out of {} songs, accuracy: {}%'
+                     .format(i, num_matches, num_test_songs, accuracy))
+
+    logging.info('Average accuracy for kNN (k_fold={}, k={}): {}'.format(k_fold, k, sum(accuracies) / len(accuracies)))
+
+
+def test_songs_gaussian():
     songs, genres = get_training_songs_genres()
 
     training_songs, test_songs = split_in_two(songs)
@@ -124,6 +190,7 @@ def predict_songs_svm():
 
     classifier.predict_directory(PREDICTION_DIRECTORY, '{}test_labels_svm.csv'.format(DATA_DIRECTORY))
 
+
 def predict_songs_gaussian_process():
     songs, genres = get_training_songs_genres()
 
@@ -156,7 +223,7 @@ if __name__ == '__main__':
         datefmt='%d-%m-%Y:%H:%M:%S',
         level=logging.INFO)
 
-    # classify_songs_gaussian()
+    # test_songs_gaussian()
     # test_songs_knn(1)
     # test_songs_svm()
     # test_songs_naive_bayes()
@@ -167,7 +234,10 @@ if __name__ == '__main__':
     # predict_songs_svm()
     # predict_songs_gaussian_process()
     # predict_songs_ada()
-    predict_songs_qda()
+    # predict_songs_qda()
+
+    # test_songs_gaussian_k_fold(10)
+    test_songs_knn_k_fold(9, 10)
 
     # TODO: use k-fold cross-validation
 

@@ -41,7 +41,7 @@
 	
 	\section*{Introduction}
 	
-	Basic Gaussian and simple k-nearest neighbor (kNN) classifiers were created to classify songs into ten distinct genres. To improve performance for the online Kaggle competition, multiple elements were used from the scikit-learn (sklearn) Python library. These include using their implementation of a k-d tree for kNN, as well as using many of their other classifiers, like the SVM, Naive Bayes, Multi-layer Perceptron, ADA, QDA and Gaussian Process classifiers. The focus of this report will be to compare the simple Gaussian and kNN classifiers.
+	Gaussian and k-nearest neighbor (kNN) classifiers were created to classify songs into ten distinct genres. To improve performance for the online Kaggle competition, multiple elements were used from the scikit-learn (sklearn) Python library. These include using their implementation of a k-d tree for kNN, as well as using many of their other classifiers, like the SVM, Naive Bayes, Multi-layer Perceptron, ADA, QDA and Gaussian Process classifiers. The focus of this report will be to compare the simple Gaussian and kNN classifiers.
 	
 	\section{What assumptions about the data do we make when we model the data using a Gaussian distribution?}
 	% Several key assumptions are stated.	
@@ -61,7 +61,7 @@
 	\section{When do you expect that a Gaussian will work well and when do you think it will not work well?}
 	% Several situations are given, with elaborate discussion of the factors that make one classifier better than the other.
 	
-	A Gaussian classifier will work well when the data can be modeled with a Gaussian distribution, with the features listed in the previous question.
+	A Gaussian classifier will work well when the data can be modeled with a Gaussian distribution, with the features listed in the previous question, such as symmetry.
 	
 	A Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values. For example, if the distribution is skewed in one direction or not symmetric, a Gaussian model will not work well.
 	
