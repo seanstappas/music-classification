@@ -111,6 +111,22 @@ def test_songs_knn(k):
                  .format(num_matches, num_test_songs, (num_matches / num_test_songs) * 100))
 
 
+def test_songs_knn_simple(k):
+    songs, genres = get_training_songs_genres()
+
+    training_songs, test_songs = split_in_two(songs)
+    training_genres, test_genres = split_in_two(genres)
+
+    classifier = KnnSongClassifier(k, training_songs, training_genres, data_structure='simple')
+
+    num_matches, confusion_matrix = classifier.test(test_songs, test_genres)
+    confusion_matrix.save_to_csv('report/csv/confusion_knn_{}.csv'.format(k))
+    num_test_songs = len(test_songs)
+
+    logging.info('Matched {} out of {} songs, accuracy: {}%'
+                 .format(num_matches, num_test_songs, (num_matches / num_test_songs) * 100))
+
+
 def test_songs_svm():
     songs, genres = get_training_songs_genres()
 
@@ -228,6 +244,7 @@ if __name__ == '__main__':
     # test_songs_svm()
     # test_songs_naive_bayes()
     # test_songs_neural_network()
+    test_songs_knn_simple(1)
 
     # predict_songs_knn(2)
     # predict_songs_neural()
@@ -237,8 +254,8 @@ if __name__ == '__main__':
     # predict_songs_qda()
 
     # test_songs_gaussian_k_fold(10)
-    test_songs_knn_k_fold(10, 10)
+    # test_songs_knn_k_fold(10, 10)
 
-    # TODO: use k-fold cross-validation
+    # TODO: CLI for: training/testing, predicting (specify: kNN [with k], gaussian, data directory, logging level)
 
     logging.info('Total runtime: {} s'.format(time.time() - t))

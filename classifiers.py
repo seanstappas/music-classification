@@ -275,7 +275,8 @@ class SimpleDataStructure(KnnDataStructure):
         genre_distances = []
         for v, genre in zip(self.feature_vectors, self.genres):
             genre_distances.append(euclidean_distance(v, feature_vector))
-        return []
+        indices = np.argpartition(np.array(genre_distances), k)[:k].tolist()
+        return [self.genres[i] for i in indices]
 
 
 def euclidean_distance(a, b):
