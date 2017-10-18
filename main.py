@@ -350,8 +350,8 @@ def parse_command_line_arguments():
     # args = parser.parse_args('-c knn -s simple -d song_data/ -k 5 predict'.split())
     # args = parser.parse_args('--classifier gaussian train'.split())
     # args = parser.parse_args('--classifier knn -k 1 train --k_fold 10'.split())
-    args = parser.parse_args('--classifier gaussian predict'.split())
-    # args = parser.parse_args()
+    # args = parser.parse_args('--classifier gaussian predict'.split())
+    args = parser.parse_args()
     args.func(args)
 
 
