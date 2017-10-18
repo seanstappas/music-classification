@@ -97,6 +97,8 @@ Argument | Default Value
 `--knn_data_structure` | `kd_tree`
 `--k_fold` | 10
 
+Note that the default data path is `song_data/`. This is where the `test` and `training` directories should be, as well as the `labels.csv`. This data can be obtained from [Kaggle](https://www.kaggle.com/c/music-genre-classification/data).
+
 ## Code Organization
 
 The code relating to all the different classifiers used can be found in the `classifiers.py` file.
