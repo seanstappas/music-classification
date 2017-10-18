@@ -1,3 +1,5 @@
+from matplotlib.ticker import MaxNLocator
+
 from data_extractor import get_training_songs_genres, get_one_song_per_genre, get_songs_genre, get_songs_genres
 
 import matplotlib.pyplot as plt
@@ -95,7 +97,10 @@ def plot_all_combinations_2_vectors_2_genres():
 
 def plot_knn_accuracy(accuracies, label):
     f = plt.figure()
-    plt.plot(accuracies, 'o-', label=label)
+    ax = f.gca()
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    k_values = [k for k in range(1, len(accuracies) + 1)]
+    plt.plot(k_values, accuracies, 'o-', label=label)
     plt.grid()
     plt.xlabel('k')
     plt.ylabel('Accuracy (%)')
