@@ -343,10 +343,14 @@ def parse_command_line_arguments():
                               help="The number of partitions to use for k-fold cross-validation.")
     parser_train.set_defaults(func=train)
 
-    parser_predict = subparsers.add_parser('predict', help='Predict on new data.')
+    parser_predict = subparsers.add_parser('predict',
+                                           help='Predict on new data. Saves the result to CSV in the data path.')
     parser_predict.set_defaults(func=predict)
 
-    args = parser.parse_args('-c knn -s simple -d song_data/ -k 5 predict'.split())
+    # args = parser.parse_args('-c knn -s simple -d song_data/ -k 5 predict'.split())
+    # args = parser.parse_args('--classifier gaussian train'.split())
+    # args = parser.parse_args('--classifier knn -k 1 train --k_fold 10'.split())
+    args = parser.parse_args('--classifier gaussian predict'.split())
     # args = parser.parse_args()
     args.func(args)
 
