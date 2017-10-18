@@ -1,5 +1,5 @@
 # Music Genre Classification
-Classifies songs into genres based on feature vectors consisting of 12 features. Assignment 2 of the ECSE-526 class, as described [here](http://www.cim.mcgill.ca/~jer/courses/ai/assignments/as2/).
+Classifies songs into genres based on feature vectors consisting of 12 features. This is assignment 2 of the ECSE-526 class, as described [here](http://www.cim.mcgill.ca/~jer/courses/ai/assignments/as2/).
 
 ## Dependencies
 
