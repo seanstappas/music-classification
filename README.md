@@ -7,11 +7,95 @@ The program depends on the following packages...
 
 ## Usage
 
-To run the program, execute the following command:
+### Example Commands
+
+Here are some examples of running the program:
+
+Training with a Gaussian classifier:
+```
+python main.py --classifier gaussian train
+```
+
+Training with a kNN classifier (k = 1) and using cross-validation with 10 subsets:
+```
+python main.py --classifier knn -k 1 train --k_fold 10
+```
+
+Predicting the genres of new songs using the Gaussian classifier:
+```
+python main.py --classifier gaussian predict
+```
+
+### Help
+
+To run the program, use the command-line interface in `main.py`. To see the list of available commands, run the following:
 
 ```
-python main.py
+python main.py --help
 ```
+
+This will print the following:
+
+```
+usage: main.py [-h] [-c {knn,svm,nn,qda,gaussian,gpc,ada}]
+               [-l {info,debug,critical,warn,error}] [-d DATA_PATH]
+               [-k K_NEAREST] [-s {simple,kd_tree}]
+               {train,predict} ...
+
+Music Genre Classification.
+
+positional arguments:
+  {train,predict}
+    train               Train with training data and test data.
+    predict             Predict on new data.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c {knn,svm,nn,qda,gaussian,gpc,ada}, --classifier {knn,svm,nn,qda,gaussian,gpc,ada}
+                        The classifier to use.
+  -l {info,debug,critical,warn,error}, --logging_level {info,debug,critical,warn,error}
+                        The logging level.
+  -d DATA_PATH, --data_path DATA_PATH
+                        The path containing the 'test' and 'training'
+                        directories, as well as the 'labels' CSV.
+  -k K_NEAREST, --k_nearest K_NEAREST
+                        The number of nearest neighbours to use for kNN.
+  -s {simple,kd_tree}, --knn_data_structure {simple,kd_tree}
+                        The data structure to store previous examples for kNN.
+```
+
+To see help relating to the `train` argument, run the following:
+
+```
+python main.py train --help
+```
+
+This will print the following:
+
+```
+usage: main.py train [-h] [-f K_FOLD]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f K_FOLD, --k_fold K_FOLD
+                        The number of partitions to use for k-fold cross-
+                        validation.
+```
+
+The `predict` argument has no further optional arguments.
+
+### Default Values
+
+Here are the default values for all the optional arguments:
+
+Argument | Default Value
+--- | ---
+`--classifier` | `gaussian`
+`--logging_level` | `info`
+`--data_path` | `song_data/`
+`--k_nearest` | 1
+`--knn_data_structure` | `kd_tree`
+`--k_fold` | 10
 
 ## Code Organization
 
