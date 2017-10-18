@@ -3,7 +3,7 @@ Classifies songs into genres based on feature vectors consisting of 12 features.
 
 ## Dependencies
 
-The program depends on the the `pandas` and `numpy` libraries to load and manipulate the song data, as well as the `scikit-learn` library if using the k-d tree for kNN or any classifiers besides Gaussian and kNN.
+The program depends on the the [`pandas`](https://pandas.pydata.org/pandas-docs/stable/install.html) and [`numpy`](https://pypi.python.org/pypi/numpy) libraries to load and manipulate the song data, as well as the [`scikit-learn`](http://scikit-learn.org/stable/install.html) library if using the k-d tree for kNN or any classifiers besides Gaussian and kNN. All of these libraries can be installed via [`pip`](https://pip.pypa.io/en/stable/).
 
 ## Usage
 
