@@ -7,9 +7,9 @@ TRAINING_DIRECTORY = DATA_DIRECTORY + 'training/'
 PREDICTION_DIRECTORY = DATA_DIRECTORY + 'test/'
 
 
-def get_training_songs_genres(num_songs=None):
+def get_training_songs_genres(data_path=DATA_DIRECTORY, num_songs=None):
     logging.info('Building training and test set.')
-    labels_genres = pd.read_csv('{}labels.csv'.format(DATA_DIRECTORY))
+    labels_genres = pd.read_csv('{}labels.csv'.format(data_path))
     song_ids = labels_genres['id'].values
     songs = []
     for i, song_id in enumerate(song_ids):

@@ -1,17 +1,15 @@
 from __future__ import division
 
+import csv
 import logging
 import os
-import csv
-from abc import ABCMeta, abstractmethod
+import time
 
 import numpy as np
 import pandas as pd
-import time
+import sklearn.neighbors as nb
 from lshash import LSHash
 from scipy.spatial import KDTree
-
-import sklearn.neighbors as nb
 
 from classifiers import GaussianSongClassifier, KnnSongClassifier, KDTreeDataStructure
 from main import split_in_k
@@ -486,30 +484,7 @@ def predict_songs_knn(k):
     classifier.predict_directory(PREDICTION_DIRECTORY, 'song_data/test_labels_knn.csv')
 
 
-if __name__ == '__main__':
-    t = time.time()
-
-    logging.basicConfig(
-        format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(funcName)s:%(lineno)d] %(message)s",
-        datefmt='%d-%m-%Y:%H:%M:%S',
-        level=logging.INFO)
-
-    # test_pandas()
-
-    # classify_songs_gaussian()
-    # test_songs_knn(3)
-
-    # predict_songs_knn(3)
-
-    # classify_gaussian()
-    # classify_nearest_neighbor(5)
-    # classify_nearest_neighbor_lsh(5)
-    # classify_nearest_neighbor_kd_tree(5)
-    # classify_nearest_neighbor_kd_tree_sk(5)
-    # classify_nearest_neighbor_ball_tree(5)
-    # classify_gaussian_kaggle()
-    # test_lsh(5)
-
+def test_k_fold():
     lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     split_list = split_in_k(lst, 4)
     print(split_list)
@@ -544,6 +519,33 @@ if __name__ == '__main__':
         print('k = {}'.format(i))
         print(training_songs)
         print(training_genres)
+
+
+if __name__ == '__main__':
+    t = time.time()
+
+    logging.basicConfig(
+        format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(funcName)s:%(lineno)d] %(message)s",
+        datefmt='%d-%m-%Y:%H:%M:%S',
+        level=logging.INFO)
+
+    # test_pandas()
+
+    # classify_songs_gaussian()
+    # test_songs_knn(3)
+
+    # predict_songs_knn(3)
+
+    # classify_gaussian()
+    # classify_nearest_neighbor(5)
+    # classify_nearest_neighbor_lsh(5)
+    # classify_nearest_neighbor_kd_tree(5)
+    # classify_nearest_neighbor_kd_tree_sk(5)
+    # classify_nearest_neighbor_ball_tree(5)
+    # classify_gaussian_kaggle()
+    # test_lsh(5)
+
+    test_k_fold()
 
     # Conclusion: sklearn KD tree performs the best
     # Rule of thumb: k = sqrt(N) where N is training examples, so k = 1171

@@ -123,8 +123,10 @@ class KnnSongClassifier(SongClassifier):
         self.k = k
         if data_structure == 'kd_tree':
             self.data = KDTreeDataStructure(songs, genres)
-        else:
+        elif data_structure == 'simple':
             self.data = SimpleDataStructure(songs, genres)
+        else:
+            raise ValueError('Invalid knn data structure.')
 
     def classify(self, song):
         genre_frequencies = {}
@@ -256,6 +258,9 @@ class QdaSongClassifier(SongClassifier):
 
 
 class KnnDataStructure:
+    """
+    Data structure to query nearest neighbours for the kNN classifier.
+    """
     __metaclass__ = ABCMeta
 
     @abstractmethod
@@ -298,6 +303,9 @@ class KDTreeDataStructure(KnnDataStructure):
 
 
 class ConfusionMatrix:
+    """
+    Represents a confusion matrix, specifying the predicted genres for each actual genre.
+    """
     def __init__(self, genres):
         self.dic = {}
         for g1 in genres:

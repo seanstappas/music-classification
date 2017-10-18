@@ -1,8 +1,7 @@
+import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-from data_extractor import get_training_songs_genres, get_one_song_per_genre, get_songs_genre, get_songs_genres
-
-import matplotlib.pyplot as plt
+from data_extractor import get_one_song_per_genre, get_songs_genre, get_songs_genres
 
 GENRES = ['classical', 'country', 'edm_dance', 'jazz', 'kids', 'latin', 'metal', 'pop', 'rnb', 'rock']
 
