@@ -47,7 +47,7 @@ Music Genre Classification.
 positional arguments:
   {train,predict}
     train               Train with training data and test data.
-    predict             Predict on new data.
+    predict             Predict on new data. Saves the result to CSV in the data path.
 
 optional arguments:
   -h, --help            show this help message and exit
