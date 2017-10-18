@@ -93,7 +93,42 @@ def plot_all_combinations_2_vectors_2_genres():
             plot_two_feature_vectors_genres(i, j)
 
 
+def plot_knn_accuracy(accuracies, label):
+    f = plt.figure()
+    plt.plot(accuracies, 'o-', label=label)
+    plt.grid()
+    plt.xlabel('k')
+    plt.ylabel('Accuracy (%)')
+    f.savefig('report/plots/knn_accuracy_{}.pdf'.format(label), bbox_inches='tight')
+
+
+def plot_knn_iterations():
+    test_accuracies = [
+        60.0901882189,
+        59.8902056466,
+        60.0217845939,
+        59.4266294876,
+        59.3608400139,
+        59.4937260369,
+        59.3612757058,
+        59.0297141861,
+        58.7003311258,
+        58.502091321,
+    ]
+
+    plot_knn_accuracy(test_accuracies, 'training')
+
+    kaggle_accuracies = [
+        57.786,
+        56.557,
+        56.557
+    ]
+
+    plot_knn_accuracy(kaggle_accuracies, 'kaggle')
+
+
 if __name__ == '__main__':
     # plot_all_combinations_of_two_feature_vectors_10_songs()
     # plot_all_combinations_2_vectors_all_genres()
-    plot_all_combinations_2_vectors_2_genres()
+    # plot_all_combinations_2_vectors_2_genres()
+    plot_knn_iterations()

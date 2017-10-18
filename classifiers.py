@@ -16,6 +16,9 @@ from sklearn.neural_network import MLPClassifier
 
 
 class SongClassifier:
+    """
+    Classifies songs by their genre.
+    """
     __metaclass__ = ABCMeta
 
     def test(self, songs, genres):
@@ -98,6 +101,9 @@ class GaussianSongClassifier(SongClassifier):
 
 
 class GaussianGenreModel:
+    """
+    Gaussian model for a genre, represented by the mean and covariance matrices of the song feature vectors.
+    """
     def __init__(self, songs, genre):
         logging.info('Constructing Gaussian model for genre {}.'.format(genre))
         stacked_songs = np.vstack(songs)
