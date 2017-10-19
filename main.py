@@ -151,7 +151,7 @@ def parse_command_line_arguments():
                         help="The path containing the 'test' and 'training' directories, as well as the 'labels' CSV.")
     parser.add_argument('-k', '--k_nearest', type=int, default=1,
                         help="The number of nearest neighbours to use for kNN.")
-    parser.add_argument('-s', '--knn_data_structure', default='kd_tree', choices=['simple', 'kd_tree'],
+    parser.add_argument('-s', '--knn_data_structure', default='kd_tree', choices=['simple', 'kd_tree', 'average'],
                         help="The data structure to store previous examples for kNN.")
 
     subparsers = parser.add_subparsers()

@@ -8,6 +8,13 @@ PREDICTION_DIRECTORY = DATA_DIRECTORY + 'test/'
 
 
 def get_training_songs_genres(data_path=DATA_DIRECTORY, num_songs=None):
+    """
+    Get the training and test songs from the specified data path.
+
+    :param data_path: the path to the test and training data
+    :param num_songs: the maximum number of songs to return
+    :return: the songs and genres
+    """
     logging.info('Building training and test set.')
     labels_genres = pd.read_csv('{}labels.csv'.format(data_path))
     song_ids = labels_genres['id'].values

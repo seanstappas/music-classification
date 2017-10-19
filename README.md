@@ -66,7 +66,7 @@ optional arguments:
                         directories, as well as the 'labels' CSV.
   -k K_NEAREST, --k_nearest K_NEAREST
                         The number of nearest neighbours to use for kNN.
-  -s {simple,kd_tree}, --knn_data_structure {simple,kd_tree}
+  -s {simple,kd_tree}, --knn_data_structure {simple,kd_tree,average}
                         The data structure to store previous examples for kNN.
 ```
 
