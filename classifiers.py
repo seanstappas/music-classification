@@ -210,7 +210,7 @@ def euclidean_distance(a, b):
 
     :param a: the first vector
     :param b: the second vector
-    :return: the distance between the vectors
+    :return: the distance between the vec
     """
     return np.linalg.norm(a - b)
 
@@ -299,7 +299,7 @@ class NaiveBayesSongClassifier(SongClassifier):
 class NeuralNetworkSongClassifier(SongClassifier):
     def __init__(self, songs, genres):
         logging.info('Constructing Neural Network classifier.')
-        self.classifier = MLPClassifier(hidden_layer_sizes=(12, 12, 12))
+        self.classifier = MLPClassifier(hidden_layer_sizes=(12, 30, 12))
         x = np.vstack(songs)
         y = []
         for song, genre in zip(songs, genres):

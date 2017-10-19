@@ -50,14 +50,14 @@
 	
 	Fundamentally, when we model the data using a Gaussian distribution, we assume that it has a ``Gaussian'' shape. In the univariate case, this means that the distribution has the familiar ``bell curve'' shape. In the multivariate (n-dimensional) case, however, the contours of the distribution form an n-dimensional ellipsoid. For the 2D ($n=2$) case, for example, the shape of the contour will be an ellipse. In the context of this assignment, modeling 12 features would result in 12-dimensional Gaussian distribution.
 	
-	The univariate Gaussian distribution is also uniquely defined by its standard deviation and its mean. In the multivariate case, it is defined by a mean vector $\mu$ and a covariance matrix $\Sigma$. Importantly, the distribution is also symmetric around its mean. Although the value of the distribution is technically non-zero everywhere, it will be practically zero when the distance of a value from the mean is more than a couple standard deviations. Another consequence of the Gaussian distribution is that outliers in the data will not be well represented.
+	The univariate Gaussian distribution is also uniquely defined by its standard deviation and its mean. In the multivariate case, it is defined by a mean vector $\mu$ and a covariance matrix $\Sigma$. Importantly, the distribution is also symmetric around its mean. Although the value of the distribution is technically non-zero everywhere, it will be practically zero when the distance of a value from the mean is more than a couple standard deviations. Another consequence of modeling using a Gaussian distribution is that outliers in the data will not be well represented.
 	
 	\section{In general, when do you expect that a Gaussian will work well and when do you think it will not work well?}
 	% Several situations are given, with elaborate discussion of the factors that make one classifier better than the other.
 	
-	A Gaussian classifier will work well when the data can be modeled with a Gaussian distribution, with the features listed in the previous question, such as symmetry.
+	A Gaussian classifier will work well when the data can be modeled with a Gaussian distribution, with the features listed in the previous question. This mainly means that the data is symmetric around its mean and has a Gaussian shape.
 	
-	It will not work in many situations. First, if the data itself cannot be modeled as Gaussian (using the assumptions in Question 1), then a Gaussian classifier will clearly not predict the correct values. For example, if the distribution is skewed in one direction or not symmetric, a Gaussian model will not work well.
+	The main advantage that the Gaussian classifier potentially has is its speed at predicting categories for new observations. Indeed, unlike kNN, the Gaussian classifier does not have to search through the entire space of previously trained data to predict a category for new data. It simply must compute the unnormalized negative log likelihood (UNLL), given by $(x-\mu)\Sigma^{-1}(x-\mu)^T$, where $x$ is the feature vector of the new data, $\mu$ is the mean vector and $\Sigma$ is the covariance matrix describing the Gaussian distribution.
 	
 	\begin{figure}[!htb]
 		\centering
@@ -67,19 +67,28 @@
 		\label{fig:knn_accuracy_training}
 	\end{figure}
 	
+	The Gaussian classifier will not work in many situations. First, if the data itself cannot be modeled as Gaussian, then a Gaussian classifier will clearly not predict the correct values. For example, if the distribution is skewed in one direction or not symmetric, the classifier will not perform well.
+	
 	Another example where a Gaussian model would not be appropriate is if there are multiple clusters of values. Here, multiple Gaussian distributions may be appropriate, but certainly not one.
 	
 	Also, if the feature vector distributions of two categories are very similar, then their corresponding Gaussian distributions will be very close, perhaps intersecting. In this situation, a Gaussian classifier can have a hard time differentiating between these two categories.
 	
-	Also, a Gaussian classifier will not work well for values that stray too far from the mean or with many outliers. In situations like this, kNN has the clear advantage.
-	
-	The main advantage that the Gaussian classifier has is its speed at predicting categories for new observations. Indeed, unlike kNN, the Gaussian classifier does not have to search through the entire space of previously trained data to predict a category for new data. It simply must compute the unnormalized negative log likelihood (UNLL), given by $(x-\mu)\Sigma^{-1}(x-\mu)^T$, where $x$ is the feature vector of the new data, $\mu$ is the mean vector and $\Sigma$ is the covariance matrix describing the Gaussian distribution.
+	A Gaussian classifier will also not work well for values that stray too far from the mean or with many outliers. In situations like this, kNN has the clear advantage, since it stores every training example, including outliers.
+
+	Examples of all the previously described situations will be given in Question 4.
+
+	\begin{table*}[!htb]
+	\centering
+	\caption{Confusion matrix for the Gaussian classifier.}
+	\csvautobooktabular[respect all]{csv/confusion_gaussian.csv}
+	\label{table:confusion_gaussian}
+	\end{table*}
 	
 	\section{What values of $k$ work best for the kNN classifier?}
 	% A value of k is stated, with a graph showing the results of different experiments.
 
 	The results of testing kNN by k-fold cross-validation can be seen in \cref{fig:knn_accuracy_training,table:knn_accuracy_training}. The accuracy values were averaged from 10 different splits for each $k$, with $k$ ranging from 1 to 10. It can be seen that the best value of $k$ is 1, providing $60.090\%$ accuracy.
-	
+
 	\begin{table}[!htb]
 		\centering
 		\caption{Accuracy of kNN versus $k$ for local training.}
@@ -107,41 +116,24 @@
 	\section{Based on your results from this assignment, which classifier (Gaussian, kNN, or other) works best for the task of music genre classification? Discuss why.}
 	% A classifier is stated as best, with elaboration on why, and with supporting evidence.
 	
-	With 10-fold cross-validation testing on the provided test song data, an accuracy of $27.928\%$ was achieved for the Gaussian classifier and $60.090\%$ for the kNN classifier ($k = 1$). Similarly, on the Kaggle competition data set, an accuracy of $29.098\%$ was achieved for the Gaussian classifier and $57.786\%$ for the kNN classifier ($k = 1$). This implies that the kNN classifier is better for music classification. The reasons why will now be explored.
-	
-	To gain some insight into where both classifiers are succeeding and failing, a confusion matrix was created for both the Gaussian and kNN classifiers when performing local training. These can be seen in \Cref{table:confusion_gaussian,table:confusion_knn_1}, where each row in the table represents how many different genres were predicted (columns) for a given actual genre (row). We can see here that the kNN has relatively high numbers along the main diagonal of the matrix, which is a good sign. On the other hand, the Gaussian classifier mis-predicts many genres. It seems that almost all genres are predicted as ``rnb'', except for ``classical'' and ``jazz'', which are accurately predicted.
+	With 10-fold cross-validation testing on the provided test song data, an accuracy of $27.928\%$ was achieved for the Gaussian classifier and $60.090\%$ for the kNN classifier ($k = 1$). Similarly, on the Kaggle competition data set, an accuracy of $29.098\%$ was achieved for the Gaussian classifier and $57.786\%$ for the kNN classifier ($k = 1$). This implies that the kNN classifier is better for music genre classification. The reasons why will now be explored.
 	
 	\begin{table*}[!htb]
 		\centering
-		\caption{Confusion matrix for the Gaussian classifier. Each row represents the actual genre, and each column the predicted genre.}
-		\csvautobooktabular[respect all]{csv/confusion_gaussian.csv}
-		\label{table:confusion_gaussian}
-	\end{table*}
-
-	\begin{table*}[!htb]
-		\centering
-		\caption{Confusion matrix for the kNN classifier, with $k = 1$. Each row represents the actual genre, and each column the predicted genre.}
+		\caption{Confusion matrix for the kNN classifier, with $k = 1$.}
 		\csvautobooktabular[respect all]{csv/confusion_knn_1.csv}
 		\label{table:confusion_knn_1}
 	\end{table*}
-	
-	Most of the failures of the Gaussian classifier can be attributed to the simple fact that it retains much less information than the kNN for each genre. While the Gaussian classifier only stores a 12x12 covariance matrix and 12x1 mean vector for each genre, the kNN classifier stores every training example and uses these examples to predict every genre. This additional information can allow the kNN classifier to classify new songs with much greater accuracy.
-		
-	% Non-symmetric examples: metal4, metal5
-	
+
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[width=\columnwidth]{plots/metal_non_symmetric.png}
 		\caption
-		{Projection of feature 0 vs. feature 8 for 10 songs from the ``metal'' genre. The distribution is not symmetric.}
+		{Feature 0 vs. feature 8 for 10 songs from the ``metal'' genre. The distribution is asymmetric.}
 		\label{fig:metal_non_symmetric}
 	\end{figure}
-
-	Also, kNN can take into account very complex distributions of feature vectors, whereas the Gaussian classifier will attempt to fit a Gaussian distribution to the training data. This may not be appropriate if the data has any of the properties discussed in Question 2. Examples of situations exhibiting these properties will now be provided, by examining relationships between two features in a song. Note that, although examining two features do not encompass the entire 12-dimensional distribution, it can still provide useful insight. Indeed, if the distribution of the 12 features is Gaussian, then necessarily any combination of two features will also be Gaussian.
 	
-	Non-symmetric or skewed data is hard to model with a Gaussian distribution. An example of this can be seen in \autoref{fig:metal_non_symmetric}, where two features were plotted against each other for ten songs from the ``metal'' genre. It can clearly be seen that the data is skewed on one side, leading to asymmetry.
-	
-	% Clustering examples: jazz19, jazz34, kids1, kids10, kids11, kids12, kids13, kids14, kids15, kids16, kids17
+	To gain some insight into where both classifiers are succeeding and failing, a confusion matrix was created for both the Gaussian and kNN classifiers when performing local training. These can be seen in \Cref{table:confusion_gaussian,table:confusion_knn_1}, where each row in the table represents how many different genres were predicted (columns) for a given actual genre (row). We can see here that the kNN has relatively high numbers along the main diagonal of the matrix, which is a good sign. On the other hand, the Gaussian classifier mis-predicts many genres. It seems that almost all genres are predicted as ``rnb'', except for ``classical'' and ``jazz'', which are accurately predicted.
 	
 	\begin{figure}[!htb]
 		\centering
@@ -150,7 +142,18 @@
 		{Projection of feature 1 vs. feature 2 for 10 songs from the ``kids'' genre. Two separate clusters of values can be seen, on the left and the right.}
 		\label{fig:kids_cluster}
 	\end{figure}
+	
+	Most of the failures of the Gaussian classifier can be attributed to the simple fact that it retains much less information than the kNN for each genre. While the Gaussian classifier only stores a 12x12 covariance matrix and 12x1 mean vector for each genre, the kNN classifier stores every training example and uses these examples to predict every genre. This additional information can allow the kNN classifier to classify new songs with much greater accuracy.
+		
+	% Non-symmetric examples: metal4, metal5
 
+	Also, kNN can take into account very complex distributions of feature vectors, whereas the Gaussian classifier will attempt to fit a Gaussian distribution to the training data. This may not be appropriate if the data has any of the properties discussed in Question 2. Examples of these situations will now be provided, by examining relationships between two features in a song. Note that, although examining two features do not encompass the entire 12-dimensional distribution, it can still provide useful insight. Indeed, if the distribution of the 12 features is Gaussian, then necessarily any combination of two features will also be Gaussian.
+
+	Non-symmetric or skewed data is hard to model with a Gaussian distribution. This can be seen in \autoref{fig:metal_non_symmetric}, where two features were plotted against each other for ten songs from the ``metal'' genre. It can clearly be seen that the data is skewed on one side, leading to asymmetry.
+	
+	
+	% Clustering examples: jazz19, jazz34, kids1, kids10, kids11, kids12, kids13, kids14, kids15, kids16, kids17
+	
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[width=\columnwidth]{plots/latin_rnb_similarity.png}
@@ -161,9 +164,6 @@
 
 	Also, there are examples of genres where there are multiple clusters of data, which are hard to model with a single Gaussian. This can be seen in \autoref{fig:kids_cluster}, where two features were plotted against each other for ten songs from the ``kids'' genre. Two distinct groups of data can be seen.
 	
-
-	There are also genres with very similar distributions which cannot be easily differentiated with a Gaussian classifier. This can be seen in \autoref{fig:latin_rnb_similarity}, where the ``latin'' and ``rnb'' genres have very similar distributions. The similarity between the distributions for ``rnb'' and other genres is most probably the reason why so many genres were predicted to be ``rnb'' by the Gaussian classifier.
-	
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[width=\columnwidth]{plots/latin_extreme.png}
@@ -171,6 +171,8 @@
 		{Projection of feature 1 vs. feature 2 for 10 songs from the ``latin'' genre. There are many extreme values for which kNN would have an easier time classifying genres than the Gaussian classifier would.}
 		\label{fig:latin_extreme}
 	\end{figure}
+
+	There are also genres with very similar distributions which cannot be easily differentiated with a Gaussian classifier. This can be seen in \autoref{fig:latin_rnb_similarity}, where the ``latin'' and ``rnb'' genres have very similar distributions. The similarity between the distributions for ``rnb'' and other genres is most probably the reason why so many genres were predicted to be ``rnb'' by the Gaussian classifier.
 	
 	Also, distributions with many outliers cannot easily be classified with a Gaussian. This can be seen in \autoref{fig:latin_extreme}, where two features were plotted against each other for ten songs from the ``latin'' genre. These outliers can easily be accounted for with kNN.
 
