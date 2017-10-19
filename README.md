@@ -1,9 +1,15 @@
 # Music Genre Classification
 Classifies songs into genres based on feature vectors consisting of 12 features. This is assignment 2 of the ECSE-526 class, as described [here](http://www.cim.mcgill.ca/~jer/courses/ai/assignments/as2/).
 
-## Dependencies
+## Installation
+
+### Library Dependencies
 
 The program depends on the the [`pandas`](https://pandas.pydata.org/pandas-docs/stable/install.html) and [`numpy`](https://pypi.python.org/pypi/numpy) libraries to load and manipulate the song data, as well as the [`scikit-learn`](http://scikit-learn.org/stable/install.html) library if using the k-d tree for kNN or any classifiers besides Gaussian and kNN. The [`matplotlib`](https://matplotlib.org/faq/installing_faq.html) library was used for plotting. All of these libraries can be installed via [`pip`](https://pip.pypa.io/en/stable/).
+
+### Test Data
+
+The default data path is `song_data/`. This is where the `test` and `training` directories should be, as well as the `labels.csv` file. This data can be obtained from [Kaggle](https://www.kaggle.com/c/music-genre-classification/data). Note that the data path can be configured with the command-line arguments described in the next section, although the program will always assume that the `test` and `training` directories and `labels.csv` file are within that path.
 
 ## Usage
 
@@ -97,11 +103,10 @@ Argument | Default Value
 `--knn_data_structure` | `kd_tree`
 `--k_fold` | 10
 
-Note that the default data path is `song_data/`. This is where the `test` and `training` directories should be, as well as the `labels.csv` file. This data can be obtained from [Kaggle](https://www.kaggle.com/c/music-genre-classification/data).
 
 ## Code Organization
 
-The code relating to all the different classifiers used can be found in the `classifiers.py` file.
+The code relating to all the different classifiers used can be found in the `classifiers.py` file. The `main.py` file contains the main program, where the command-line arguments are parsed and training or predicting is performed.
 
 ## Report
 

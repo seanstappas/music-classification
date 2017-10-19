@@ -2,11 +2,11 @@ from __future__ import division
 
 import logging
 import time
-
-from classifiers import GaussianSongClassifier, KnnSongClassifier, SvmSongClassifier, NaiveBayesSongClassifier, \
-    NeuralNetworkSongClassifier, GaussianProcessSongClassifier, AdaSongClassifier, QdaSongClassifier
-from data_extractor import get_training_songs_genres, PREDICTION_DIRECTORY, DATA_DIRECTORY
 from argparse import ArgumentParser
+
+from classifiers import GaussianSongClassifier, KnnSongClassifier, SvmSongClassifier, NeuralNetworkSongClassifier, \
+    GaussianProcessSongClassifier, AdaSongClassifier, QdaSongClassifier
+from data_extractor import get_training_songs_genres
 
 LOGGING_LEVELS = {
     'info': logging.INFO,
@@ -27,17 +27,24 @@ CLASSIFIERS = {
 }
 
 
-def split_in_two(l, ratio=0.5):
-    split_index = int(ratio * len(l))
-    return l[:split_index], l[split_index:]
-
-
 def split_in_k(l, k):
+    """
+    Split the provided list into k sub-lists.
+
+    :param l: the list to split
+    :param k: the number of sub-lists to create
+    :return: a list containing all the sub-lists
+    """
     split_index = len(l) // k
     return [l[split_index * i:split_index * i + split_index] if i < k - 1 else l[split_index * i:] for i in range(k)]
 
 
 def train_k_fold(args):
+    """
+    Train on the local song data with k-fold cross-validation.
+
+    :param args: the command-line arguments
+    """
     songs, genres = get_training_songs_genres(args.data_path)
 
     k_fold = args.k_fold
@@ -76,6 +83,11 @@ def train_k_fold(args):
 
 
 def predict_songs(args):
+    """
+    Predict the genres of new songs.
+
+    :param args: the command-line arguments
+    """
     songs, genres = get_training_songs_genres(args.data_path)
 
     classifier_name = args.classifier
@@ -91,6 +103,11 @@ def predict_songs(args):
 
 
 def train(args):
+    """
+    Train on the local data.
+
+    :param args: the command-line arguments
+    """
     t = time.time()
     setup_logging(args.logging_level)
     train_k_fold(args)
@@ -98,6 +115,11 @@ def train(args):
 
 
 def predict(args):
+    """
+    Perform prediction on new data.
+
+    :param args: the command-line arguments
+    """
     t = time.time()
     setup_logging(args.logging_level)
     predict_songs(args)
@@ -105,6 +127,11 @@ def predict(args):
 
 
 def setup_logging(level):
+    """
+    Set up logging, with the specified logging level.
+
+    :param level: the logging level
+    """
     logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(funcName)s:%(lineno)d] %(message)s",
         datefmt='%d-%m-%Y:%H:%M:%S',
@@ -112,6 +139,9 @@ def setup_logging(level):
 
 
 def parse_command_line_arguments():
+    """
+    Parse the command-line arguments provided by the user.
+    """
     parser = ArgumentParser(description='Music Genre Classification.')
     parser.add_argument('-c', '--classifier', default='gaussian', choices=CLASSIFIERS.keys(),
                         help='The classifier to use.')
