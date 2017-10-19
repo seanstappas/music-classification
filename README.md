@@ -110,4 +110,4 @@ The code relating to all the different classifiers used can be found in the `cla
 
 ## Report
 
-The report (`report.pdf`) and all related files (tex, plots, logs and CSV files) can be found in the `report` directory.
+The report (`report.pdf`) and all related files (logs and CSV files) can be found in the `report` directory.
